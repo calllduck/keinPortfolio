@@ -357,6 +357,14 @@ const projects: Project[] = [
     scroll-snap-align: start;
   }
 
+  /* Mobile: narrower cards that never exceed the screen width */
+  @media (max-width: 600px) {
+    .projects__item {
+      flex-basis: 78vw;
+      max-width: 300px;
+    }
+  }
+
   .projects__item[hidden] {
     display: none;
   }

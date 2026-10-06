@@ -281,4 +281,11 @@ const items: ExperienceItem[] = [
     padding: 0.25em 0.65em;
     border-radius: var(--radius-pill);
   }
+
+  /* Mobile: smaller experience image so it doesn't fill the screen */
+  @media (max-width: 600px) {
+    .timeline__media {
+      max-width: 170px;
+    }
+  }
 </style>

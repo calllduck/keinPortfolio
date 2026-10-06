@@ -27,6 +27,9 @@ jobs:
 
       - name: Install, build, and upload site
         uses: withastro/action@v4
+        with:
+          # Match the Node version required by package.json "engines".
+          node-version: 22
 
   deploy:
     needs: build

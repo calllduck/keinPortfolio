@@ -163,6 +163,7 @@ const items: Certification[] = [
     display: flex;
     flex-direction: column;
     flex: 0 0 300px; /* fixed width so the row scrolls */
+    max-width: 78vw; /* never exceed the screen on mobile */
     scroll-snap-align: start;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
