@@ -57,15 +57,15 @@ const items: Award[] = [
 
 <section id="awards" class="awards">
   <div class="container">
-    <header class="awards__header">
+    <header class="awards__header" data-reveal>
       <h2 class="awards__title">Honors &amp; Awards</h2>
       <p class="awards__subtitle">Recognition I'm proud of.</p>
     </header>
 
     <ul class="awards__grid">
       {
-        items.map((a) => (
-          <li class="award-card">
+        items.map((a, i) => (
+          <li class="award-card" data-reveal data-reveal-delay={(i % 4) * 80}>
             <div class="award-card__media">
               <ZoomableImage
                 src={resolveImg(a.image)}

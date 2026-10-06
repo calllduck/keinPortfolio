@@ -1,0 +1,58 @@
+---
+// ScrollReveal: global fade-in-on-scroll behavior.
+// Mounted once in BaseLayout. Any element with [data-reveal] starts
+// hidden (slightly down + transparent) and animates in when it
+// scrolls into view, via a single IntersectionObserver.
+// Respects prefers-reduced-motion (shows everything, no motion).
+---
+
+<style is:global>
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+  }
+
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
+
+  if (reduce || !("IntersectionObserver" in window)) {
+    // No motion: just show everything.
+    els.forEach((el) => el.classList.add("is-visible"));
+  } else {
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            // Optional stagger via data-reveal-delay (ms).
+            const delay = Number(el.dataset.revealDelay ?? 0);
+            window.setTimeout(() => el.classList.add("is-visible"), delay);
+            obs.unobserve(el); // reveal once, then stop watching
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    els.forEach((el) => observer.observe(el));
+  }
+</script>

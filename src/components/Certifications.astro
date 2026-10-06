@@ -69,15 +69,15 @@ const items: Certification[] = [
 
 <section id="certifications" class="certs">
   <div class="container">
-    <header class="certs__header">
+    <header class="certs__header" data-reveal>
       <h2 class="certs__title">Certifications</h2>
       <p class="certs__subtitle">Credentials I've earned.</p>
     </header>
 
     <ul class="certs__grid">
       {
-        items.map((c) => (
-          <li class="cert-card">
+        items.map((c, i) => (
+          <li class="cert-card" data-reveal data-reveal-delay={(i % 4) * 80}>
             {c.image && (
               <div class="cert-card__media">
                 <ZoomableImage

@@ -23,7 +23,7 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
 <section id="about" class="about">
   <div class="container about__inner">
     <!-- Creative photo frame -->
-    <div class="photo">
+    <div class="photo" data-reveal>
       <!-- Outline squircle behind the photo; morphs on its own,
            out of sync with the main frame. -->
       <span class="photo__outline" aria-hidden="true"></span>
@@ -42,7 +42,7 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
     </div>
 
     <!-- Text block -->
-    <div class="about__text">
+    <div class="about__text" data-reveal data-reveal-delay="120">
       <h1 class="about__heading">
         Hi, you can call me <span class="accent">Ke'in!</span>
       </h1>

@@ -57,7 +57,7 @@ const projects: Project[] = [
     title: "Passvault Devsecops Pipeline",
     description: "A personal password manager designed around shift-left DevSecOps principles, utilizing an automated CI/CD pipeline to scan for secrets, code vulnerabilities, and dependency CVEs before deploying to production.",
     category: "cyber",
-    tags: ["CI/CD", "GitHub Actions", "CodeQL", "Trivy", "Docker", "npm audit", "Gitleaks"],
+    tags: ["GitHub Actions", "CodeQL", "Trivy", "Docker", "npm audit", "Gitleaks"],
     links: [
       {
         label: "Read report",
@@ -95,27 +95,27 @@ const projects: Project[] = [
     image: "proj4.png",
   },
   {
+    title: "Washly: On-Demand Laundry",
+    description: "Connecting Customers, Laundromats, and Drivers with dual pricing models, role-based workflows, and a built-in warranty claim system.",
+    category: "software",
+    tags: ["Flutter", "Provider", "Node.js", "Express", "PostgreSQL", "Prisma", "Docker", "Midtrans"],
+    links: [
+      { label: "View Live", url: "https://washly-prototype.up.railway.app/" },
+      { label: "Code", url: "https://github.com/sashadiva/washly" },
+    ],
+    image: "proj7.png",
+  },
+  {
     title: "MakeMeUp: MUA Discovery & Booking Platform",
     description:
       "Connecting clients with professional makeup artists, featuring personalized filters by style, budget, and location for a tailored booking experience.",
     category: "software",
     tags: ["Express", "Node.js", "React", "Tailwind", "Vite", "Docker", "PostgreSQL","Prisma", "Midtrans"],
     links: [
-      { label: "Live", url: "https://makemeup.up.railway.app/home/client" },
+      { label: "View Live", url: "https://makemeup.up.railway.app/home/client" },
       { label: "Code", url: "https://github.com/calllduck/MakeMeUp" },
     ],
     image: "proj6.png",
-  },
-  {
-    title: "Washly: On-Demand Laundry",
-    description: "Connecting Customers, Laundromats, and Drivers with dual pricing models, role-based workflows, and a built-in warranty claim system.",
-    category: "software",
-    tags: ["Flutter", "Provider", "Node.js", "Express", "PostgreSQL", "Prisma", "Docker", "Midtrans"],
-    links: [
-      { label: "Live", url: "https://washly-prototype.up.railway.app/" },
-      { label: "Code", url: "https://github.com/sashadiva/washly" },
-    ],
-    image: "proj7.png",
   },
   {
     title: "Tanti Logistics: Database Normalization",
@@ -226,7 +226,7 @@ const projects: Project[] = [
 
 <section id="projects" class="projects">
   <div class="container">
-    <header class="projects__header">
+    <header class="projects__header" data-reveal>
       <h2 class="projects__title">Projects</h2>
       <p class="projects__subtitle">A few things I've built.</p>
     </header>
@@ -249,12 +249,17 @@ const projects: Project[] = [
 
     <div class="projects__grid" data-grid>
       {
-        projects.map((p) => {
+        projects.map((p, i) => {
           // Normalize to a space-separated list so filtering can match
           // any of a project's categories.
           const cats = Array.isArray(p.category) ? p.category : [p.category];
           return (
-            <div class="projects__item" data-category={cats.join(" ")}>
+            <div
+              class="projects__item"
+              data-category={cats.join(" ")}
+              data-reveal
+              data-reveal-delay={(i % 4) * 80}
+            >
               <ProjectCard {...p} />
             </div>
           );
