@@ -29,10 +29,42 @@ const {
 
 const formAction = `https://formspree.io/f/${formId}`;
 const formConfigured = formId !== "your-form-id";
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <section id="contact" class="contact">
   <div class="container">
+    <div class="contact__grid">
+      <!-- Left column: profile (photo centered + bio below) -->
+      <div class="contact__profile">
+        <div class="contact__photo">
+          <span class="contact__photo-outline" aria-hidden="true"></span>
+          <div class="contact__photo-frame">
+            <img
+              src={`${base.replace(/\/$/, "")}/me.jpg`}
+              alt="Portrait of Ke'in"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+        <h3 class="contact__name">Kettin</h3>
+        <p class="contact__bio">
+          Computer Science student at BINUS University combining <strong
+            class="contact__highlight"
+            >Web &amp; Mobile Development, Cybersecurity, and UI/UX Design</strong
+          >. I focus on
+          end-to-end application creation, from designing seamless user
+          interfaces to building scalable web and mobile applications,
+          auditing vulnerabilities (OWASP), and automating CI/CD pipelines.
+          As a complement, my experience in technical communication helps
+          bridge technical risks with business value.
+        </p>
+      </div>
+
+      <!-- Right column: header + form + socials -->
+      <div class="contact__main">
     <header class="contact__header">
       <h2 class="contact__title">Contact Me</h2>
       <p class="contact__subtitle">
@@ -180,6 +212,10 @@ const formConfigured = formId !== "your-form-id";
           </svg>
         </a>
       </aside>
+      </div>
+      <!-- /.contact__main -->
+    </div>
+    <!-- /.contact__grid -->
   </div>
 
   <!-- Decorative double squircle, placed OUTSIDE the container so it
@@ -217,6 +253,141 @@ const formConfigured = formId !== "your-form-id";
     font-weight: var(--fw-light);
     color: var(--color-text-muted);
     max-width: 52ch;
+  }
+
+  /* ---------- Two-column layout: profile | form ---------- */
+  .contact__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+
+  @media (min-width: 860px) {
+    .contact__grid {
+      grid-template-columns: 1fr 1.1fr;
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+  }
+
+  /* Left column: profile */
+  .contact__profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* photo centered */
+    text-align: left;
+    max-width: 560px;
+  }
+
+  /* Animated squircle photo frame (same style as the About section) */
+  .contact__photo {
+    position: relative;
+    width: clamp(220px, 50vw, 340px);
+    aspect-ratio: 1;
+    isolation: isolate;
+  }
+
+  .contact__photo-frame {
+    width: 100%;
+    height: 100%;
+    padding: 3px;
+    border-radius: 32% 68% 62% 38% / 42% 38% 62% 58%;
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      var(--color-accent-active) 60%,
+      transparent
+    );
+    animation: contact-photo-morph 16s ease-in-out infinite;
+  }
+
+  .contact__photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    background: var(--color-surface-2);
+    display: block;
+  }
+
+  /* Outline squircle behind the photo; morphs out of sync. */
+  .contact__photo-outline {
+    position: absolute;
+    inset: -14px;
+    z-index: -1;
+    border: 2px solid var(--color-accent);
+    opacity: 0.5;
+    border-radius: 50% 50% 42% 58% / 55% 48% 52% 45%;
+    animation: contact-photo-morph-outline 11s ease-in-out infinite;
+    animation-delay: -3s;
+  }
+
+  @keyframes contact-photo-morph {
+    0%,
+    100% {
+      border-radius: 32% 68% 62% 38% / 42% 38% 62% 58%;
+    }
+    25% {
+      border-radius: 58% 42% 38% 62% / 62% 58% 42% 38%;
+    }
+    50% {
+      border-radius: 45% 55% 70% 30% / 55% 48% 52% 45%;
+    }
+    75% {
+      border-radius: 60% 40% 48% 52% / 38% 62% 40% 60%;
+    }
+  }
+
+  @keyframes contact-photo-morph-outline {
+    0%,
+    100% {
+      border-radius: 50% 50% 42% 58% / 55% 48% 52% 45%;
+    }
+    33% {
+      border-radius: 40% 60% 55% 45% / 48% 62% 38% 52%;
+    }
+    66% {
+      border-radius: 62% 38% 48% 52% / 40% 50% 50% 60%;
+    }
+  }
+
+  .contact__name {
+    position: relative; /* sit above the morphing outline */
+    z-index: 1;
+    margin-top: var(--space-xl); /* clear the outline below the photo */
+    font-size: var(--fs-xl);
+  }
+
+  /* Small pink underline between the name and the bio (centered) */
+  .contact__name::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 3px;
+    margin: var(--space-sm) auto 0;
+    background: var(--color-accent);
+    border-radius: var(--radius-pill);
+  }
+
+  .contact__highlight {
+    color: var(--color-text);
+    font-weight: var(--fw-bold);
+  }
+
+  .contact__bio {
+    margin-top: var(--space-sm);
+    font-size: var(--fs-md);
+    font-weight: var(--fw-light);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-align: justify;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact__photo-frame,
+    .contact__photo-outline {
+      animation: none;
+    }
   }
 
   /* ---------- Form ---------- */
