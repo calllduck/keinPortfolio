@@ -71,7 +71,7 @@ const allLinks: ProjectLink[] = [
         <div class="card__links">
           {allLinks.map((link) => (
             <a
-              class="card__link"
+              class="btn btn--outline card__link"
               href={link.url}
               target="_blank"
               rel="noopener"
@@ -162,20 +162,16 @@ const allLinks: ProjectLink[] = [
 
   .card__links {
     display: flex;
-    gap: var(--space-md);
-    /* Stick links to the bottom of the card */
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    /* Stick buttons to the bottom of the card */
     margin-top: auto;
-    padding-top: var(--space-sm);
+    padding-top: var(--space-md);
   }
 
+  /* Smaller than the default .btn, to fit inside the card */
   .card__link {
-    font-family: var(--font-display);
     font-size: var(--fs-sm);
-    font-weight: var(--fw-medium);
-    color: var(--color-text);
-  }
-
-  .card__link:hover {
-    color: var(--color-accent);
+    padding: 0.5em 1em;
   }
 </style>
