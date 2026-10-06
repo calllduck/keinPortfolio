@@ -21,9 +21,9 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
 ---
 
 <section id="about" class="about">
-  <div class="container about__inner">
+  <div class="container about__inner" data-reveal>
     <!-- Creative photo frame -->
-    <div class="photo" data-reveal>
+    <div class="photo">
       <!-- Outline squircle behind the photo; morphs on its own,
            out of sync with the main frame. -->
       <span class="photo__outline" aria-hidden="true"></span>
@@ -42,7 +42,7 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
     </div>
 
     <!-- Text block -->
-    <div class="about__text" data-reveal data-reveal-delay="120">
+    <div class="about__text">
       <h1 class="about__heading">
         Hi, you can call me <span class="accent">Ke'in!</span>
       </h1>
@@ -210,10 +210,24 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
     }
   }
 
-  /* Mobile: center the photo (text stays left-aligned for reading) */
+  /* Mobile: center the photo and the text block */
   @media (max-width: 767px) {
+    .about__inner {
+      align-items: center;
+      text-align: center;
+    }
+
     .photo {
       align-self: center;
+    }
+
+    .about__heading,
+    .about__desc {
+      margin-inline: auto; /* center the width-capped text blocks */
+    }
+
+    .about__actions {
+      justify-content: center;
     }
   }
 

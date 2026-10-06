@@ -225,8 +225,8 @@ const projects: Project[] = [
 ---
 
 <section id="projects" class="projects">
-  <div class="container">
-    <header class="projects__header" data-reveal>
+  <div class="container" data-reveal>
+    <header class="projects__header">
       <h2 class="projects__title">Projects</h2>
       <p class="projects__subtitle">A few things I've built.</p>
     </header>
@@ -249,17 +249,12 @@ const projects: Project[] = [
 
     <div class="projects__grid" data-grid>
       {
-        projects.map((p, i) => {
+        projects.map((p) => {
           // Normalize to a space-separated list so filtering can match
           // any of a project's categories.
           const cats = Array.isArray(p.category) ? p.category : [p.category];
           return (
-            <div
-              class="projects__item"
-              data-category={cats.join(" ")}
-              data-reveal
-              data-reveal-delay={(i % 4) * 80}
-            >
+            <div class="projects__item" data-category={cats.join(" ")}>
               <ProjectCard {...p} />
             </div>
           );
@@ -362,11 +357,11 @@ const projects: Project[] = [
     scroll-snap-align: start;
   }
 
-  /* Mobile: narrower cards that never exceed the screen width */
+  /* Mobile: slightly under screen width so the next card peeks out */
   @media (max-width: 600px) {
     .projects__item {
-      flex-basis: 78vw;
-      max-width: 300px;
+      flex-basis: 80vw;
+      max-width: 320px;
     }
   }
 

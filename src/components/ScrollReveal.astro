@@ -1,9 +1,8 @@
 ---
-// ScrollReveal: global fade-in-on-scroll behavior.
-// Mounted once in BaseLayout. Any element with [data-reveal] starts
-// hidden (slightly down + transparent) and animates in when it
-// scrolls into view, via a single IntersectionObserver.
-// Respects prefers-reduced-motion (shows everything, no motion).
+// ScrollReveal: global fade-in-on-scroll behavior, mounted once in
+// BaseLayout. Any element with [data-reveal] starts hidden (slightly
+// down + transparent) and fades in when scrolled into view, via a
+// single IntersectionObserver. Respects prefers-reduced-motion.
 ---
 
 <style is:global>
@@ -35,7 +34,6 @@
   const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
 
   if (reduce || !("IntersectionObserver" in window)) {
-    // No motion: just show everything.
     els.forEach((el) => el.classList.add("is-visible"));
   } else {
     const observer = new IntersectionObserver(
@@ -43,14 +41,13 @@
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const el = entry.target as HTMLElement;
-            // Optional stagger via data-reveal-delay (ms).
             const delay = Number(el.dataset.revealDelay ?? 0);
             window.setTimeout(() => el.classList.add("is-visible"), delay);
-            obs.unobserve(el); // reveal once, then stop watching
+            obs.unobserve(el);
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.1, rootMargin: "0px 0px -8% 0px" },
     );
 
     els.forEach((el) => observer.observe(el));
