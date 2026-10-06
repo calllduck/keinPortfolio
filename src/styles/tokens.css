@@ -1,0 +1,101 @@
+/* ============================================================
+   DESIGN TOKENS
+   Single source of truth for the whole site.
+   Change a value here and it propagates everywhere.
+   Base colors chosen by the owner:
+     - Accent (pink): #f53d6b
+     - Background (black): #080b12
+   The rest is derived to harmonize with those two.
+   ============================================================ */
+
+:root {
+  /* ---------- Color: backgrounds ---------- */
+  --color-bg: #080b12;            /* page background (base black) */
+  --color-surface: #0e121c;       /* cards / raised panels */
+  --color-surface-2: #141926;     /* nested surfaces, hover rows */
+  --color-elevated: #1a2030;      /* popovers, highest surface */
+
+  /* ---------- Color: borders / lines ---------- */
+  --color-border: #202738;        /* subtle dividers & card borders */
+  --color-border-strong: #2d3650; /* emphasized borders */
+
+  /* ---------- Color: text ---------- */
+  --color-text: #eef1f8;          /* primary text */
+  --color-text-muted: #9aa4bd;    /* secondary text */
+  --color-text-faint: #5f6a85;    /* captions, disabled */
+
+  /* ---------- Color: accent (pink) ---------- */
+  --color-accent: #f53d6b;        /* primary accent */
+  --color-accent-hover: #ff5c84;  /* lighter, for hover */
+  --color-accent-active: #d62a56; /* darker, for pressed */
+  --color-accent-soft: rgba(245, 61, 107, 0.12); /* tints / fills */
+  --color-accent-ring: rgba(245, 61, 107, 0.35); /* focus rings */
+  --color-accent-glow: rgba(245, 61, 107, 0.25); /* glow shadows */
+
+  /* ---------- Color: feedback ---------- */
+  --color-on-accent: #ffffff;     /* text/icons on top of accent */
+
+  /* ---------- Typography ---------- */
+  /* Display font: geometric, used for headings/brand. */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Body font: highly legible, used for paragraphs and UI text. */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas,
+    monospace;
+
+  /* Fluid type scale (clamp: min, preferred, max) */
+  --fs-xs: 0.78rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: 1.125rem;
+  --fs-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-xl: clamp(1.6rem, 1.3rem + 1.2vw, 2.1rem);
+  --fs-2xl: clamp(2.1rem, 1.6rem + 2.2vw, 3rem);
+  --fs-3xl: clamp(2.8rem, 2rem + 3.6vw, 4.5rem);
+
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  --lh-tight: 1.15;
+  --lh-snug: 1.35;
+  --lh-normal: 1.6;
+
+  /* ---------- Spacing scale ---------- */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* ---------- Radius ---------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* ---------- Shadows ---------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 0 1px var(--color-accent-ring),
+    0 8px 30px var(--color-accent-glow);
+
+  /* ---------- Layout ---------- */
+  --container-max: 1600px;
+  /* Content (body) gutter — intentionally a bit larger than the navbar's. */
+  --container-pad: clamp(1.5rem, 4vw, 4rem);
+  /* Navbar gutter — slightly tighter so the header sits closer to edges. */
+  --navbar-pad: clamp(1rem, 2vw, 2rem);
+
+  /* ---------- Motion ---------- */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-slow: 360ms;
+}

@@ -1,0 +1,222 @@
+---
+// About: top (hero) section.
+// Left-aligned content: creative photo frame, heading, description,
+// and the two CTA buttons (reusing the global .btn styles).
+interface Props {
+  photo?: string; // path under /public, resolved against BASE_URL
+  photoAlt?: string;
+  cvHref?: string;
+  contactHref?: string;
+}
+
+const base = import.meta.env.BASE_URL;
+const {
+  photo = "me.jpg",
+  photoAlt = "Portrait of Ke'in",
+  cvHref = "https://drive.google.com/file/d/1A2-c36are0jBg-YZDHhnyXf8Ui1CLncW/view?usp=drive_link",
+  contactHref = "#contact",
+} = Astro.props;
+
+const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
+---
+
+<section id="about" class="about">
+  <div class="container about__inner">
+    <!-- Creative photo frame -->
+    <div class="photo">
+      <!-- Outline squircle behind the photo; morphs on its own,
+           out of sync with the main frame. -->
+      <span class="photo__outline" aria-hidden="true"></span>
+      <div class="photo__glow" aria-hidden="true"></div>
+      <div class="photo__frame">
+        <img
+          class="photo__img"
+          src={photoSrc}
+          alt={photoAlt}
+          width="320"
+          height="320"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <!-- Text block -->
+    <div class="about__text">
+      <h1 class="about__heading">
+        Hi, you can call me <span class="accent">Ke'in!</span>
+      </h1>
+      <p class="about__desc">
+        Computer Science student at BINUS University combining Cybersecurity, Software Development, and UI/UX Design. I focus on end-to-end software engineering, from designing seamless user interfaces, building scalable web and mobile applications, auditing vulnerabilities (OWASP), to automating CI/CD pipelines. As a complement, my experience in technical communication helps bridge technical risks with business value
+      </p>
+      <div class="about__actions">
+        <a class="btn btn--lg btn--outline" href={cvHref} target="_blank" rel="noopener">View my CV</a>
+        <a class="btn btn--lg btn--fill" href={contactHref}>Contact me</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: var(--space-3xl) var(--space-2xl);
+  }
+
+  .about__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* everything left-aligned */
+    gap: var(--space-xl);
+    text-align: left;
+  }
+
+  /* ---------- Creative photo frame ---------- */
+  .photo {
+    position: relative;
+    width: clamp(200px, 40vw, 300px);
+    aspect-ratio: 1;
+    isolation: isolate;
+  }
+
+  /* Soft pink glow behind the frame */
+  .photo__glow {
+    position: absolute;
+    inset: -12%;
+    z-index: -1;
+    background: radial-gradient(
+      circle at 50% 40%,
+      var(--color-accent-glow),
+      transparent 70%
+    );
+    filter: blur(6px);
+  }
+
+  /* Squircle gradient border via padding + background */
+  .photo__frame {
+    width: 100%;
+    height: 100%;
+    padding: 3px;
+    /* Organic squircle that slowly, irregularly morphs over time. */
+    border-radius: 32% 68% 62% 38% / 42% 38% 62% 58%;
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      var(--color-accent-active) 60%,
+      transparent
+    );
+    animation: morph 16s ease-in-out infinite;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+
+  /* Slow, irregular blob morph: each keyframe is a different
+     asymmetric squircle, so the shape drifts organically. */
+  @keyframes morph {
+    0%,
+    100% {
+      border-radius: 32% 68% 62% 38% / 42% 38% 62% 58%;
+    }
+    25% {
+      border-radius: 58% 42% 38% 62% / 62% 58% 42% 38%;
+    }
+    50% {
+      border-radius: 45% 55% 70% 30% / 55% 48% 52% 45%;
+    }
+    75% {
+      border-radius: 60% 40% 48% 52% / 38% 62% 40% 60%;
+    }
+  }
+
+  .photo__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    background: var(--color-surface-2);
+    display: block;
+  }
+
+  /* Subtle lift on hover (shape keeps morphing on its own) */
+  .photo:hover .photo__frame {
+    transform: translateY(-4px);
+  }
+
+  /* Outline squircle behind the photo. Same morphing idea but a
+     different keyframe set, slower, and offset — so it never moves
+     in sync with the main frame. */
+  .photo__outline {
+    position: absolute;
+    inset: -14px;
+    z-index: -1;
+    border: 2px solid var(--color-accent);
+    opacity: 0.5;
+    border-radius: 50% 50% 42% 58% / 55% 48% 52% 45%;
+    animation: morph-outline 11s ease-in-out infinite;
+    animation-delay: -3s; /* start mid-cycle so it's out of phase */
+  }
+
+  @keyframes morph-outline {
+    0%,
+    100% {
+      border-radius: 50% 50% 42% 58% / 55% 48% 52% 45%;
+    }
+    33% {
+      border-radius: 40% 60% 55% 45% / 48% 62% 38% 52%;
+    }
+    66% {
+      border-radius: 62% 38% 48% 52% / 40% 50% 50% 60%;
+    }
+  }
+
+  /* ---------- Text ---------- */
+  .about__heading {
+    font-size: var(--fs-2xl);
+    max-width: 20ch;
+  }
+
+  .accent {
+    color: var(--color-accent);
+  }
+
+  .about__desc {
+    margin-top: var(--space-md);
+    font-size: var(--fs-base);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+    max-width: 68ch;
+  }
+
+  .about__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+
+  /* ---------- Responsive: side-by-side on wider screens ---------- */
+  @media (min-width: 768px) {
+    .about {
+      padding-block: var(--space-3xl);
+    }
+
+    .about__inner {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-2xl);
+    }
+
+    .photo {
+      flex-shrink: 0;
+      width: clamp(260px, 28vw, 340px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo__frame,
+    .photo:hover .photo__frame,
+    .photo__outline {
+      animation: none;
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

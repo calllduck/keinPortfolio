@@ -1,0 +1,219 @@
+---
+// Honors & Awards: grid of award cards.
+// `image` is REQUIRED for every award (shown edge-to-edge on top).
+// Edit the `items` array below to add your own.
+interface Award {
+  title: string;
+  issuer: string;
+  date: string; // e.g. "2024"
+  image: string; // required, path under /public
+  imageAlt?: string;
+  description?: string;
+}
+
+import ZoomableImage from "./ZoomableImage.astro";
+
+const base = import.meta.env.BASE_URL;
+const resolveImg = (src: string) => `${base.replace(/\/$/, "")}/${src}`;
+
+const items: Award[] = [
+  {
+    title: "Dean's List Award",
+    date: "2025",
+    image: "award1.jpeg",
+    imageAlt: "Dean's List",
+    description: "BINUS University",
+  },
+  {
+    title: "1st Place, Invention Udayana UI/UX Design Competition",
+    date: "2025",
+    image: "award2.png",
+    imageAlt: "1st Place UI/UX Invention",
+    description: "Universitas Udayana",
+  },
+  {
+    title: "1st Place, IDSC International Business Case Competition",
+    date: "2025",
+    image: "award3.png",
+    imageAlt: "1st Place IBCC IDSC",
+    description: "Universitas Airlangga",
+  },
+  {
+    title: "1st Place, Astra Motor Business Case Competition Jakarta Region",
+    date: "2025",
+    image: "award5.jpeg",
+    imageAlt: "1st place BCC Astra",
+    description: "Astra Motor BSD",
+  },
+  {
+    title: "1st Place, CCI Summit UI/UX Design Competition",
+    date: "2024",
+    image: "award4.png",
+    imageAlt: "1st Place UI/UX CCI",
+    description: "Telkom University",
+  },
+];
+---
+
+<section id="awards" class="awards">
+  <div class="container">
+    <header class="awards__header">
+      <h2 class="awards__title">Honors &amp; Awards</h2>
+      <p class="awards__subtitle">Recognition I'm proud of.</p>
+    </header>
+
+    <ul class="awards__grid">
+      {
+        items.map((a) => (
+          <li class="award-card">
+            <div class="award-card__media">
+              <ZoomableImage
+                src={resolveImg(a.image)}
+                alt={a.imageAlt ?? a.title}
+              />
+            </div>
+
+            <div class="award-card__content">
+              <div class="award-card__body">
+                <h3 class="award-card__name">{a.title}</h3>
+                <p class="award-card__issuer">{a.issuer}</p>
+                {a.description && (
+                  <p class="award-card__desc">{a.description}</p>
+                )}
+              </div>
+              <span class="award-card__date">{a.date}</span>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .awards {
+    padding-block: var(--space-2xl);
+  }
+
+  .awards__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .awards__title {
+    font-size: var(--fs-2xl);
+  }
+
+  .awards__subtitle {
+    margin-top: var(--space-xs);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+  }
+
+  /* ---------- Horizontal scroll row (consistent with projects/certs) ---------- */
+  .awards__grid {
+    display: flex;
+    gap: var(--space-lg);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-block: var(--space-xs) var(--space-md);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+
+  .awards__grid::-webkit-scrollbar {
+    height: 8px;
+  }
+  .awards__grid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .awards__grid::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: var(--radius-pill);
+  }
+  .awards__grid::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+  }
+
+  /* ---------- Card ---------- */
+  .award-card {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+
+  .award-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Required photo: top of card, edge-to-edge */
+  .award-card__media {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .award-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+
+  .award-card:hover .award-card__media img {
+    transform: scale(1.04);
+  }
+
+  .award-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    flex: 1;
+  }
+
+  .award-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .award-card__name {
+    font-size: var(--fs-lg);
+  }
+
+  .award-card__issuer {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .award-card__desc {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+    margin: var(--space-2xs) 0 0;
+  }
+
+  .award-card__date {
+    font-family: var(--font-display);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-accent);
+    /* stick to the bottom */
+    margin-top: auto;
+  }
+</style>

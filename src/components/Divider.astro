@@ -1,0 +1,115 @@
+---
+// Divider: a modern section separator.
+// - With a `label`: two gradient lines flanking a centered chip.
+// - Without a label: a single, seamless gradient line (no gap).
+// Reusable between any two sections for a consistent look.
+interface Props {
+  label?: string; // optional text in the center chip
+}
+const { label } = Astro.props;
+---
+
+{
+  label ? (
+    <div class="divider divider--labeled container" role="separator">
+      <span class="divider__line" />
+      <span class="divider__chip">
+        <span class="divider__spark" aria-hidden="true">
+          ✦
+        </span>
+        {label}
+      </span>
+      <span class="divider__line divider__line--right" />
+    </div>
+  ) : (
+    <div class="divider container" role="separator" aria-hidden="true">
+      <span class="divider__line divider__line--full" />
+    </div>
+  )
+}
+
+<style>
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding-block: var(--space-xl);
+  }
+
+  /* No label: no gap between pieces. */
+  .divider:not(.divider--labeled) {
+    gap: 0;
+  }
+
+  .divider__line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-border) 35%,
+      var(--color-accent-ring) 100%
+    );
+  }
+
+  /* Right line (labeled): mirror so pink sits toward the center chip. */
+  .divider__line--right {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-ring) 0%,
+      var(--color-border) 65%,
+      transparent
+    );
+  }
+
+  /* Full line (no label): soft pink in the middle, fading out to
+     transparent at both the left and right ends. */
+  .divider__line--full {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(245, 61, 107, 0.45) 50%,
+      transparent 100%
+    );
+  }
+
+  .divider__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-2xs) var(--space-md);
+    font-family: var(--font-display);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+  }
+
+  .divider__spark {
+    color: var(--color-accent);
+    animation: spark-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes spark-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.82);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .divider__spark {
+      animation: none;
+    }
+  }
+</style>

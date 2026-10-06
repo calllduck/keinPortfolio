@@ -1,0 +1,157 @@
+---
+// Lightbox: a single shared image popup, mounted once in BaseLayout.
+// Any element with [data-zoomable][data-src] opens it on click.
+---
+
+<div class="lightbox" data-lightbox hidden>
+  <div class="lightbox__backdrop" data-lightbox-close></div>
+  <figure class="lightbox__figure">
+    <img class="lightbox__img" data-lightbox-img src="" alt="" />
+  </figure>
+  <button class="lightbox__close" type="button" data-lightbox-close aria-label="Close">
+    <svg viewBox="0 0 24 24" width="22" height="22">
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        d="M6 6l12 12M18 6L6 18"
+      ></path>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: var(--space-xl);
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  .lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: lb-fade var(--dur) var(--ease);
+  }
+
+  .lightbox__figure {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    max-width: min(92vw, 1100px);
+    max-height: 88vh;
+    animation: lb-pop var(--dur) var(--ease);
+  }
+
+  .lightbox__img {
+    display: block;
+    max-width: 100%;
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    background: var(--color-surface);
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: var(--space-lg);
+    right: var(--space-lg);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition:
+      color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+
+  .lightbox__close:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  @keyframes lb-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lb-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox__backdrop,
+    .lightbox__figure {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const lb = document.querySelector<HTMLElement>("[data-lightbox]");
+  const lbImg = document.querySelector<HTMLImageElement>("[data-lightbox-img]");
+
+  if (lb && lbImg) {
+    const open = (src: string, alt: string) => {
+      lbImg.src = src;
+      lbImg.alt = alt;
+      lb.hidden = false;
+      document.body.style.overflow = "hidden"; // lock scroll
+    };
+
+    const close = () => {
+      lb.hidden = true;
+      lbImg.src = "";
+      document.body.style.overflow = "";
+    };
+
+    // Delegate: any [data-zoomable] click opens the lightbox.
+    document.addEventListener("click", (e) => {
+      const trigger = (e.target as HTMLElement).closest<HTMLElement>(
+        "[data-zoomable]",
+      );
+      if (trigger) {
+        e.preventDefault();
+        const src = trigger.dataset.src ?? "";
+        const img = trigger.querySelector("img");
+        const alt = img?.getAttribute("alt") ?? "";
+        if (src) open(src, alt);
+        return;
+      }
+
+      if ((e.target as HTMLElement).closest("[data-lightbox-close]")) {
+        close();
+      }
+    });
+
+    // Close on Escape.
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !lb.hidden) close();
+    });
+  }
+</script>

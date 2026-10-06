@@ -1,0 +1,355 @@
+---
+// Navbar: sticky top bar.
+// Left: name "Kettin" with a looping typing animation.
+// Right: About link + two CTA buttons (outline "View my CV",
+//        filled "Contact me").
+// Responsive: on mobile the links/buttons collapse into a
+//             toggleable menu behind a hamburger button.
+interface Props {
+  name?: string;
+  cvHref?: string;
+  contactHref?: string;
+}
+const {
+  name = "Kettin",
+  cvHref = "https://drive.google.com/file/d/1A2-c36are0jBg-YZDHhnyXf8Ui1CLncW/view?usp=drive_link",
+  contactHref = "#contact",
+} = Astro.props;
+---
+
+<header class="navbar">
+  <div class="container navbar__inner">
+    <a class="brand" href="#top" aria-label={name}>
+      <span class="brand__text" data-typed>{name}</span>
+      <span class="brand__cursor" aria-hidden="true"></span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      aria-controls="primary-nav"
+      data-menu-toggle
+    >
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+    </button>
+
+    <nav class="nav" id="primary-nav" aria-label="Primary" data-nav>
+      <ul class="nav__list">
+        <li><a class="nav__link" href="#about">About</a></li>
+        <li><a class="nav__link" href="#projects">Projects</a></li>
+        <li><a class="nav__link" href="#experience">Experiences</a></li>
+        <li><a class="nav__link" href="#certifications">Certifications</a></li>
+        <li><a class="nav__link" href="#awards">Awards</a></li>
+      </ul>
+      <div class="nav__actions">
+        <a class="btn btn--outline" href={cvHref} target="_blank" rel="noopener">View my CV</a>
+        <a class="btn btn--fill" href={contactHref}>Contact me</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .navbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-height: 72px;
+    /* Navbar gutter — tighter than the body content gutter.
+       Controlled via the --navbar-pad token. */
+    padding-inline: var(--navbar-pad);
+  }
+
+  /* ---------- Brand / typed name ---------- */
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--font-display);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-lg);
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .brand:hover {
+    color: var(--color-text);
+  }
+
+  .brand__text {
+    color: var(--color-accent);
+  }
+
+  .brand__cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    margin-left: 1px;
+    background: var(--color-accent);
+    animation: blink 1s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* ---------- Nav (desktop) ---------- */
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .nav__link {
+    position: relative;
+    color: var(--color-text-muted);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    padding: var(--space-2xs) 0;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .nav__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .nav__link:hover,
+  .nav__link:focus-visible {
+    color: var(--color-text);
+  }
+
+  .nav__link:hover::after,
+  .nav__link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .nav__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  /* ---------- Hamburger (hidden on desktop) ---------- */
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .menu-toggle__bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    margin-inline: auto;
+    background: var(--color-text);
+    transition:
+      transform var(--dur) var(--ease),
+      opacity var(--dur) var(--ease);
+  }
+
+  /* Animate hamburger -> X when open */
+  .navbar[data-open] .menu-toggle__bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .navbar[data-open] .menu-toggle__bar:nth-child(2) {
+    opacity: 0;
+  }
+  .navbar[data-open] .menu-toggle__bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ---------- Mobile layout ---------- */
+  @media (max-width: 720px) {
+    .menu-toggle {
+      display: flex;
+    }
+
+    .nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-lg);
+      padding: var(--space-lg) var(--container-pad) var(--space-xl);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+
+      /* Hidden by default: collapsed + non-interactive */
+      transform: translateY(-8px);
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        transform var(--dur) var(--ease),
+        opacity var(--dur) var(--ease),
+        visibility var(--dur) var(--ease);
+    }
+
+    .navbar[data-open] .nav {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .nav__list {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .nav__link {
+      font-size: var(--fs-md);
+    }
+
+    .nav__actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-sm);
+    }
+
+    .nav__actions .btn {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand__cursor {
+      animation: none;
+      opacity: 0.6;
+    }
+  }
+</style>
+
+<script>
+  // --- Looping typing animation for the brand ---
+  // Cycles: type "Kettin" -> pause -> delete -> type "Portfolio." -> loop.
+  // Progressive enhancement: name is already in the markup.
+  const prefersReduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  const el = document.querySelector<HTMLElement>("[data-typed]");
+
+  if (el && !prefersReduced) {
+    const words = ["Kettin's", "Portfolio.", "Cyber Security", "Software Development", "UI/UX Design"];
+    const TYPE_MS = 120;
+    const DELETE_MS = 70;
+    const HOLD_MS = 1400;
+    const GAP_MS = 400;
+
+    let wordIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+
+    el.textContent = "";
+
+    const tick = () => {
+      const current = words[wordIndex];
+
+      if (!deleting) {
+        charIndex += 1;
+        el.textContent = current.slice(0, charIndex);
+        if (charIndex === current.length) {
+          deleting = true;
+          window.setTimeout(tick, HOLD_MS);
+          return;
+        }
+        window.setTimeout(tick, TYPE_MS);
+      } else {
+        charIndex -= 1;
+        el.textContent = current.slice(0, charIndex);
+        if (charIndex === 0) {
+          deleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          window.setTimeout(tick, GAP_MS);
+          return;
+        }
+        window.setTimeout(tick, DELETE_MS);
+      }
+    };
+
+    window.setTimeout(tick, 400);
+  }
+
+  // --- Mobile menu toggle ---
+  const navbar = document.querySelector<HTMLElement>(".navbar");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+
+  if (navbar && toggle && nav) {
+    const closeMenu = () => {
+      navbar.removeAttribute("data-open");
+      toggle.setAttribute("aria-expanded", "false");
+    };
+
+    toggle.addEventListener("click", () => {
+      const isOpen = navbar.hasAttribute("data-open");
+      if (isOpen) {
+        closeMenu();
+      } else {
+        navbar.setAttribute("data-open", "");
+        toggle.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    // Close the menu when a link/button inside it is clicked.
+    nav.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).closest("a")) {
+        closeMenu();
+      }
+    });
+
+    // Close on Escape.
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMenu();
+    });
+  }
+</script>

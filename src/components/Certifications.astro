@@ -1,0 +1,249 @@
+---
+// Certifications: grid of certification cards.
+// `credential` (the "View credential" link) is optional per item.
+// Edit the `items` array below to add your own.
+interface Certification {
+  name: string;
+  issuer: string;
+  date: string; // e.g. "2024"
+  credential?: string; // optional link to verify/view the credential
+  image?: string; // optional, path under /public (shown edge-to-edge on top)
+  imageAlt?: string;
+}
+
+import ZoomableImage from "./ZoomableImage.astro";
+
+const base = import.meta.env.BASE_URL;
+const resolveImg = (src?: string) =>
+  src ? `${base.replace(/\/$/, "")}/${src}` : undefined;
+
+const items: Certification[] = [
+  {
+    name: "Microsoft Certified: Azure AI Fundamentals",
+    issuer: "Microsoft",
+    date: "2026",
+    // Example WITH a credential link:
+    credential: "https://www.credly.com/badges/fff8173a-29f8-4e38-b98b-3929081c72b8/linked_in_profile",
+    image: "cert1.jpeg",
+    imageAlt: "Microsoft AI-900",
+  },
+  {
+    name: "Oracle Databases for Developers Fundamentals",
+    issuer: "Oracle",
+    date: "2025",
+    image: "cert2.jpg",
+    imageAlt: "Oracle Database",
+  },
+  {
+    name: "Google AI Professional Certificate",
+    issuer: "Google",
+    date: "2026",
+    image: "cert3.jpg",
+    imageAlt: "Google AI Professional",
+    credential: "https://www.coursera.org/account/accomplishments/specialization/U16LNQDPYBSO",
+  },
+  {
+    name: "Python 101 for Data Science",
+    issuer: "Cognitive Class",
+    date: "2025",
+    credential: "https://courses.cognitiveclass.ai/certificates/cedde5e5398749efbaa9dda49d04d096",
+    image: "cert4.jpg",
+    imageAlt: "Python 101 Data Science",
+  },
+  {
+    name: "Secure by Design: Building Security into Development",
+    issuer: "ID Networkers",
+    date: "2026",
+    image: "Secure by Design.jpg",
+    imageAlt: "Devsecops",
+  },
+  {
+    name: "Belajar Dasar Web Pentesting",
+    issuer: "ID Networkers",
+    date: "2026",
+    image: "Web-Pentest.jpg",
+    imageAlt: "Web Pentesting",
+  },
+];
+---
+
+<section id="certifications" class="certs">
+  <div class="container">
+    <header class="certs__header">
+      <h2 class="certs__title">Certifications</h2>
+      <p class="certs__subtitle">Credentials I've earned.</p>
+    </header>
+
+    <ul class="certs__grid">
+      {
+        items.map((c) => (
+          <li class="cert-card">
+            {c.image && (
+              <div class="cert-card__media">
+                <ZoomableImage
+                  src={resolveImg(c.image)!}
+                  alt={c.imageAlt ?? `${c.name} certificate`}
+                />
+              </div>
+            )}
+
+            <div class="cert-card__content">
+              <div class="cert-card__body">
+                <h3 class="cert-card__name">{c.name}</h3>
+                <p class="cert-card__issuer">{c.issuer}</p>
+                <span class="cert-card__date">{c.date}</span>
+              </div>
+
+              {c.credential && (
+                <a
+                  class="cert-card__link"
+                  href={c.credential}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  View credential ↗
+                </a>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .certs {
+    padding-block: var(--space-2xl);
+  }
+
+  .certs__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .certs__title {
+    font-size: var(--fs-2xl);
+  }
+
+  .certs__subtitle {
+    margin-top: var(--space-xs);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+  }
+
+  /* ---------- Horizontal scroll row ---------- */
+  .certs__grid {
+    display: flex;
+    gap: var(--space-lg);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* room so hover-lift + shadow aren't clipped */
+    padding-block: var(--space-xs) var(--space-md);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+
+  /* Thin custom scrollbar (WebKit) */
+  .certs__grid::-webkit-scrollbar {
+    height: 8px;
+  }
+  .certs__grid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .certs__grid::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: var(--radius-pill);
+  }
+  .certs__grid::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+  }
+
+  /* ---------- Card ---------- */
+  .cert-card {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 300px; /* fixed width so the row scrolls */
+    scroll-snap-align: start;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden; /* so the photo follows the rounded corners */
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+
+  .cert-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Dominant photo: top of card, edge-to-edge, no margin */
+  .cert-card__media {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .cert-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+
+  .cert-card:hover .cert-card__media img {
+    transform: scale(1.04);
+  }
+
+  /* Text area gets the padding (card itself has none now) */
+  .cert-card__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    flex: 1;
+  }
+
+  .cert-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .cert-card__name {
+    font-size: var(--fs-lg);
+  }
+
+  .cert-card__issuer {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .cert-card__date {
+    font-family: var(--font-display);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-accent);
+  }
+
+  /* Optional "View credential" link */
+  .cert-card__link {
+    font-family: var(--font-display);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-text);
+    align-self: flex-start;
+  }
+
+  .cert-card__link:hover {
+    color: var(--color-accent);
+  }
+</style>

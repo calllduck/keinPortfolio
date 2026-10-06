@@ -1,0 +1,284 @@
+---
+// Experience: a vertical timeline of roles / milestones.
+// Edit the `items` array below to add your own experience.
+interface ExperienceItem {
+  role: string;
+  org: string;
+  period: string; // e.g. "2023 — Present"
+  description?: string;
+  tags?: string[];
+  image?: string; // optional, path under /public
+  imageAlt?: string;
+}
+
+import ZoomableImage from "./ZoomableImage.astro";
+
+const base = import.meta.env.BASE_URL;
+const resolveImg = (src?: string) =>
+  src ? `${base.replace(/\/$/, "")}/${src}` : undefined;
+
+const items: ExperienceItem[] = [
+  {
+    role: "Trainee of Security Manpower Training Program 2026",
+    org: "NSHC, South Korea - Remote",
+    period: "Aug 2026 — Sept 2026",
+    description:
+      "Completed an intensive cyber security program covering Linux, Web & Network Security, Cryptography, Digital Forensics, ICS/OT, OSINT and AI Security. Validated skills through assessments, sales kits, and video creation, culminating in a hands-on Web VAPT final project.",
+    tags: ["Linux", "Web & Network Security", "Cryptography", "Digital Forensics", "ICS/OT", "OSINT", "AI Security", "VAPT"],
+    // Optional image: drop a file in public/ and set its name here.
+    // Replace with your real photo (e.g. "exp-1.jpg"), or remove
+    // these two lines to hide the image for this entry.
+    image: "exp1.png",
+    imageAlt: "SMT Program Indonesia 2026",
+  },
+  {
+    role: "Freshmen Partner",
+    org: "BINUS University, Bandung, Onsite",
+    period: "Sept 2025 — Sept 2026",
+    description:
+      "Mentor and assist 9 new students throughout their entire first year (12 Months) to help them adapt to university life and act as a responsible guide to ensure a seamless academic and social transition during their foundational year.",
+    tags: ["Leadership", "Teamwork", "Communication"],
+    image: "exp2.jpeg",
+    imageAlt: "Freshmen Partner",
+  },
+  {
+    role: "Member of Lab Curiousity",
+    org: "BINUS University, Bandung, Onsite",
+    period: "Dec 2024 — Present",
+    description:
+      "A student community at BINUS University @Bandung dedicated to academic and tech competitions. Competed in 10+ competitions to test and expand problem-solving capabilities, while regularly attending skill-building workshops and intensive training sessions alongside fellow team members.",
+    tags: ["Problem Solving", "Teamwork", "Product Ideation", "Creative Pitching", "Software Development"],
+  },
+  {
+    role: "Freshmen Leader",
+    org: "BINUS University, Bandung, Onsite",
+    period: "Jul 2025 — Sept 2025",
+    description:
+      "Lead and guide 50+ freshmen to ensure the smooth execution of the First Year Program before the first semester begins",
+    tags: ["Leadership", "Teamwork", "Communication"],
+    image: "exp4.jpeg",
+    imageAlt: "Freshmen Leader",
+  },
+  {
+    role: "Future Maker Committee",
+    org: "BINUS University, Bandung, Onsite",
+    period: "Jul 2025",
+    description:
+      "Handled participant registration and administrative verifications for BINUS University's Future Maker 2025 youth innovation competition, ensuring a smooth onboarding process for high school teams.",
+    tags: ["Management", "Communication"],
+    image: "exp5.png",
+    imageAlt: "Future Maker Committee",
+  },
+  {
+    role: "UI/UX Designer Freelance",
+    org: "Masimuda Creative, Bandung, Hybrid",
+    period: "May 2024 — Jun 2026",
+    description:
+      "Designed user-friendly interfaces by creating wireframes, prototypes, and visual assets that align with user needs and brand guidelines, as well as developing intuitive user experiences and interaction flows to ensure seamless navigation and engagement across digital products.",
+    tags: ["User Interface & Experience Design", "Systems Design"],
+    image: "",
+    imageAlt: "",
+  },
+  {
+    role: "Graphic Designer Intern",
+    org: "D2L.sg, Singapore, Remote",
+    period: "Jan 2025 — Mar 2025",
+    description:
+      "Designed brand-aligned Instagram posts, offline posters, and visual assets to support marketing campaigns and promotional activities.",
+    tags: ["Graphic Design", "Brand Design"],
+    image: "",
+    imageAlt: "",
+  },
+  {
+    role: "Volunteer Tutor",
+    org: "Teach for Indonesia, Bandung, Onsite",
+    period: "Sep 2024 — Dec 2024",
+    description:
+      "Volunteered at Panti Yatim Indonesia teaching basic Math and English to elementary students, developing strong communication, teamwork, and mentorship skills.",
+    tags: ["Teaching", "Communication", "Teamwork"],
+    image: "exp8.jpeg",
+    imageAlt: "Volunteer Tutor",
+  },
+  {
+    role: "Vice Manager of Visual",
+    org: "From 2 with Love, Bandung, Onsite",
+    period: "Aug 2023 — Apr 2024",
+    description:
+      "Designed brand-aligned event collateral, from social media, print, and bumper animation assets to a custom event mascot, while coordinating with visual vendors, artists, sponsors, and media partners to ensure all materials strictly met visual guidelines.",
+    tags: ["Brand Design", "Illustration", "Graphic Design", "Leadership", "Teamwork"],
+    image: "exp9.jpeg",
+    imageAlt: "F2WL Visual",
+  },
+];
+---
+
+<section id="experience" class="experience">
+  <div class="container">
+    <header class="experience__header">
+      <h2 class="experience__title">Experiences</h2>
+      <p class="experience__subtitle">Where I've been.</p>
+    </header>
+
+    <ol class="timeline">
+      {
+        items.map((item) => (
+          <li class="timeline__item">
+            <span class="timeline__dot" aria-hidden="true" />
+            <div class="timeline__content">
+              {item.image && (
+                <div class="timeline__media">
+                  <ZoomableImage
+                    src={resolveImg(item.image)!}
+                    alt={item.imageAlt ?? `${item.org}`}
+                  />
+                </div>
+              )}
+              <h3 class="timeline__role">{item.role}</h3>
+              <span class="timeline__period">{item.period}</span>
+              <p class="timeline__org">{item.org}</p>
+              {item.description && (
+                <p class="timeline__desc">{item.description}</p>
+              )}
+              {item.tags && item.tags.length > 0 && (
+                <ul class="timeline__tags">
+                  {item.tags.map((t) => (
+                    <li class="timeline__tag">{t}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .experience {
+    padding-block: var(--space-2xl);
+  }
+
+  .experience__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .experience__title {
+    font-size: var(--fs-2xl);
+  }
+
+  .experience__subtitle {
+    margin-top: var(--space-xs);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+  }
+
+  /* ---------- Timeline ---------- */
+  .timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    /* room for the line + dots on the left */
+    padding-left: var(--space-lg);
+  }
+
+  /* The vertical line */
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      var(--color-accent),
+      var(--color-border) 90%
+    );
+  }
+
+  .timeline__item {
+    position: relative;
+  }
+
+  .timeline__dot {
+    position: absolute;
+    left: calc(-1 * var(--space-lg) + 1px);
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 4px var(--color-accent-soft);
+  }
+
+  .timeline__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  /* Optional image for an entry */
+  .timeline__media {
+    margin-bottom: var(--space-sm);
+    width: 100%;
+    max-width: 240px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+  }
+
+  .timeline__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .timeline__role {
+    font-size: var(--fs-lg);
+  }
+
+  /* Period sits on its own line, right under the role title */
+  .timeline__period {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-accent);
+    margin-top: 2px;
+  }
+
+  .timeline__org {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .timeline__desc {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+    margin: var(--space-2xs) 0 0;
+    max-width: 68ch;
+  }
+
+  .timeline__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+  }
+
+  .timeline__tag {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+    padding: 0.25em 0.65em;
+    border-radius: var(--radius-pill);
+  }
+</style>

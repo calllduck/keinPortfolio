@@ -1,0 +1,395 @@
+---
+// Projects: showcase grid with category filter pills.
+// Edit the `projects` array below to add/remove your work.
+// Each item's `category` must match one of the CATEGORIES values.
+import ProjectCard from "./ProjectCard.astro";
+
+type Category = "cyber" | "software" | "uiux";
+
+interface Project {
+  title: string;
+  description: string;
+  // One category or several — e.g. "cyber" or ["software", "uiux"].
+  category: Category | Category[];
+  tags?: string[];
+  links?: { label: string; url: string }[]; // any number of custom links
+  image?: string;
+}
+
+// Filter options (value must match Project.category).
+const CATEGORIES: { value: Category | "all"; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "cyber", label: "Cyber Security" },
+  { value: "software", label: "Software Development" },
+  { value: "uiux", label: "UI/UX" },
+];
+
+const projects: Project[] = [
+  {
+    title: "Travel-App Penetration Testing Project",
+    description:
+      "Conducted a real-world mobile pentest on a live travel app by decompiling its Android APK, exploiting critical hardcoded credentials and backend secrets, and delivering OWASP/CVSS v4.0 risk remediations.",
+    category: "cyber",
+    tags: ["JADX", "MobSF", "Frida", "Apktool", "Smali"],
+    links: [
+      {
+        label: "Read Report",
+        url: "https://drive.google.com/file/d/1ONZMtocG3lFSPgvRAFoD5Y2Zh1312FI6/view?usp=drive_link",
+      },
+    ],
+    image: "proj1.png",
+  },
+  {
+    title: "CTF Web App VAPT",
+    description:
+      "Performed a grey-box security assessment on a CTF learning platform using OWASP WSTG v4.2. Uncovered IDOR and CSRF vulnerabilities compromising curriculum privacy and competition integrity (CVSS 5.3), followed by detailed remediation strategies.",
+    category: "cyber",
+    tags: ["Pyhton", "ZAP", "Nmap", "Burpsuite", "WSTG", "ffuf",],
+    links: [
+      {
+        label: "Read Report",
+        url: "https://drive.google.com/file/d/11gPgetK6zz5x-VoOiGTKFJxVHfwwQIOI/view?usp=drive_link",
+      },
+    ],
+    image: "proj2.png",
+  },
+  {
+    title: "Passvault Devsecops Pipeline",
+    description: "A personal password manager designed around shift-left DevSecOps principles, utilizing an automated CI/CD pipeline to scan for secrets, code vulnerabilities, and dependency CVEs before deploying to production.",
+    category: "cyber",
+    tags: ["CI/CD", "GitHub Actions", "CodeQL", "Trivy", "Docker", "npm audit", "Gitleaks"],
+    links: [
+      {
+        label: "Read report",
+        url: "https://drive.google.com/file/d/1dMqaYX4hu8kOW8hH32AXNCjf1V3oBQs4/view?usp=drive_link",
+      },
+      { label: "Code", url: "https://github.com/calllduck/PassVault" },
+    ],
+    image: "proj3.png",
+  },
+  {
+    title: "Stealthmole Saleskit Deck",
+    description: "During my SMT program training, I made an enterprise sales kit deck translating complex dark web threat intelligence features into strategic B2B business values, demonstrating strong technical communication and cybersecurity sales enablement capabilities.",
+    category: "cyber",
+    tags: ["Technical Communication"],
+    links: [
+      {
+        label: "Read Deck",
+        url: "https://drive.google.com/file/d/1qRHhvdCJ3AB_oZVcwPUc2ACrLNd0OQ7r/view?usp=drive_link",
+      },
+    ],
+    image: "proj5.png",
+  },
+  {
+    title: "Threat Modelling on McD App",
+    description:
+      "Conducted a comprehensive STRIDE threat modeling analysis on 10 core features of the McDonald's mobile app, mapping risks to OWASP Top 10 and CAPEC to deliver actionable mitigation strategies for data privacy and reward abuse.",
+    category: "cyber",
+    tags: ["Threat Modelling", "STRIDE", "CAPEC", "OWASP Top 10"],
+    links: [
+      {
+        label: "Read Report",
+        url: "https://drive.google.com/file/d/18ekRsPNijrOjqQCHLKi4XwtODMzY6-N1/view?usp=drive_link",
+      },
+    ],
+    image: "proj4.png",
+  },
+  {
+    title: "MakeMeUp: MUA Discovery & Booking Platform",
+    description:
+      "MakeMeUp! is a digital marketplace platform connecting clients with professional makeup artists, featuring personalized filters by style, budget, and location for a tailored booking experience.",
+    category: "software",
+    tags: ["Express", "Node.js", "React", "Tailwind", "Vite", "Docker", "PostgreSQL","Prisma", "Midtrans"],
+    links: [
+      { label: "Live", url: "https://makemeup.up.railway.app/home/client" },
+      { label: "Code", url: "https://github.com/calllduck/MakeMeUp" },
+    ],
+    image: "proj6.png",
+  },
+  {
+    title: "Washly: On-Demand Laundry",
+    description: "Washly is a three-sided laundry marketplace app connecting Customers, Laundromats, and Drivers with dual pricing models, role-based workflows, and a built-in warranty claim system. \n ***The web is only for demo purpose, this project ideally installed on a mobile device",
+    category: "software",
+    tags: ["Flutter", "Provider", "Node.js", "Express", "PostgreSQL", "Prisma", "Docker", "Midtrans"],
+    links: [
+      { label: "Live", url: "https://washly-prototype.up.railway.app/" },
+      { label: "Code", url: "https://github.com/sashadiva/washly" },
+    ],
+    image: "proj7.png",
+  },
+  {
+    title: "Tanti Logistics: Database Normalization",
+    description: "Redesigned an end-to-end relational database for Tanti Logistic by normalizing raw operational shipment data into a 3NF schema to eliminate data anomalies and improve multi-transit tracking visibility.",
+    category: "software",
+    tags: ["SQL", "xampp", "DB Normalization"],
+    links: [
+      {
+        label: "Read Report",
+        url: "https://drive.google.com/drive/folders/1khtwWZOcKA5eTcgTFxeUKqLfArF72kCA?usp=drive_link",
+      },
+    ],
+    image: "proj8.png",
+  },
+  {
+    title: "Cisco Packet Tracer: Subnetting & Routing",
+    description: "Designed an multi-region network topology in Cisco Packet Tracer using VLSM subnetting, dynamic OSPF routing, and Standard/Extended ACL traffic filtering for secure multi-region communication.",
+    category: ["software", "cyber"],
+    tags: ["Subnetting", "Routing", "FLSM", "VLSM", "RIP", "OSPF", "ACL"],
+    links: [
+      {
+        label: "Read Report",
+        url: "https://drive.google.com/drive/folders/1z2GYFhn-LVADtZ3T9a89Ll2F1aiUAIrS?usp=drive_link",
+      },
+    ],
+    image: "proj9.png",
+  },
+  {
+    title: "Data Structures: Warehouse Management Systems in C",
+    description: "Built a C-based Warehouse Management System integrating multiple core data structures to handle inventory management, fast searching, and automated order processing efficiently.",
+    category: "software",
+    tags: ["C", "BST", "Linked List", "Hash Table", "MIn-Heap", "Queue", "Stack"],
+    links: [
+      {
+        label: "Read Report",
+        url: "https://drive.google.com/file/d/1N1BIF5zEYcIyA1Zx9-lOB7cyVvnESTka/view?usp=drive_link",
+      },
+    ],
+    image: "proj10.png",
+  },
+  {
+    title: "Wiraga: AI-powered Traditional Dance Learning Platform",
+    description: "Wiraga is an AI-powered platform that helps children learn traditional Indonesian dances through gamified levels and real-time movement correction.",
+    category: "uiux",
+    tags: ["Figma", "Adobe Illustator"],
+    links: [
+      {
+        label: "View Design",
+        url: "https://www.behance.net/gallery/251249729/Wiraga",
+      },
+    ],
+    image: "proj11.png",
+  },
+  {
+    title: "Buylo: Minimalist E-Commerce",
+    description: "A clutter-free e-commerce app built for Gen Z, delivering a fast, minimal shopping experience with simple checkout and clear order tracking.",
+    category: "uiux",
+    tags: ["Figma", "Adobe Illustator"],
+    links: [
+      {
+        label: "View Design",
+        url: "https://www.behance.net/gallery/251249709/Buylo",
+      },
+    ],
+    image: "proj12.png",
+  },
+  {
+    title: "Takarasa: Personalized Nutrition & Meal App",
+    description: "Takarasa is a personalized nutrition app that helps users maintain healthy eating habits through per-gram portion control, flexible catering, and integrated meal journaling.",
+    category: "uiux",
+    tags: ["Figma", "Adobe Illustator"],
+    links: [
+      {
+        label: "View Design",
+        url: "https://www.behance.net/gallery/251248823/Takarasa",
+      },
+    ],
+    image: "proj13.png",
+  },
+  {
+    title: "Milklab Barista Creation 2025",
+    description: "Designed the landing page and registration/submission flows for MILKLAB’s national barista competition in Jakarta, crafting supporting micro-elements and iconography to complement core brand visuals.",
+    category: "uiux",
+    tags: ["Figma", "Adobe Illustator"],
+    links: [
+      {
+        label: "View Design",
+        url: "https://www.behance.net/gallery/251247543/MILKLAB-Barista-Creation-2025",
+      },
+    ],
+    image: "proj14.png",
+  },
+  {
+    title: "XLSmart B-500 Summit 2025",
+    description: "Designed an end-to-end event landing page for a premier C-level ICT summit, crafting custom micro-elements, UI iconography, and a high-contrast dark mode layout for schedules and registration.",
+    category: "uiux",
+    tags: ["Figma", "Adobe Illustator"],
+    links: [
+      {
+        label: "View Design",
+        url: "https://www.behance.net/gallery/251246569/XLSmart-B500-Summit-2025",
+      },
+    ],
+    image: "proj15.png",
+  },
+];
+---
+
+<section id="projects" class="projects">
+  <div class="container">
+    <header class="projects__header">
+      <h2 class="projects__title">Projects</h2>
+      <p class="projects__subtitle">A few things I've built.</p>
+    </header>
+
+    <!-- Filter pills -->
+    <div class="filters" role="group" aria-label="Filter projects by category">
+      {
+        CATEGORIES.map((c, i) => (
+          <button
+            class="filter-pill"
+            type="button"
+            data-filter={c.value}
+            aria-pressed={i === 0 ? "true" : "false"}
+          >
+            {c.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="projects__grid" data-grid>
+      {
+        projects.map((p) => {
+          // Normalize to a space-separated list so filtering can match
+          // any of a project's categories.
+          const cats = Array.isArray(p.category) ? p.category : [p.category];
+          return (
+            <div class="projects__item" data-category={cats.join(" ")}>
+              <ProjectCard {...p} />
+            </div>
+          );
+        })
+      }
+    </div>
+
+    <p class="projects__empty" data-empty hidden>
+      No projects in this category yet.
+    </p>
+  </div>
+</section>
+
+<style>
+  .projects {
+    padding-block: var(--space-2xl);
+  }
+
+  .projects__header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .projects__title {
+    font-size: var(--fs-2xl);
+  }
+
+  .projects__subtitle {
+    margin-top: var(--space-xs);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+  }
+
+  /* ---------- Filter pills ---------- */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+  }
+
+  .filter-pill {
+    font-family: var(--font-display);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 0.55em 1.15em;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      color var(--dur) var(--ease),
+      background-color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+
+  .filter-pill:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+  }
+
+  /* Active pill: filled pink with a soft glow */
+  .filter-pill[aria-pressed="true"] {
+    color: var(--color-on-accent);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* ---------- Horizontal scroll row ---------- */
+  .projects__grid {
+    display: flex;
+    gap: var(--space-lg);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-block: var(--space-xs) var(--space-md);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+
+  .projects__grid::-webkit-scrollbar {
+    height: 8px;
+  }
+  .projects__grid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .projects__grid::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: var(--radius-pill);
+  }
+  .projects__grid::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+  }
+
+  /* Each item is a fixed-width card so the row scrolls */
+  .projects__item {
+    flex: 0 0 380px;
+    scroll-snap-align: start;
+  }
+
+  .projects__item[hidden] {
+    display: none;
+  }
+
+  .projects__empty {
+    color: var(--color-text-muted);
+    font-weight: var(--fw-light);
+  }
+</style>
+
+<script>
+  // Client-side category filtering.
+  const pills = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  const items = document.querySelectorAll<HTMLElement>("[data-category]");
+  const empty = document.querySelector<HTMLElement>("[data-empty]");
+
+  const applyFilter = (value: string) => {
+    let visible = 0;
+    items.forEach((item) => {
+      // data-category may hold multiple space-separated categories.
+      const cats = (item.dataset.category ?? "").split(" ");
+      const match = value === "all" || cats.includes(value);
+      item.hidden = !match;
+      if (match) visible += 1;
+    });
+    if (empty) empty.hidden = visible !== 0;
+  };
+
+  pills.forEach((pill) => {
+    pill.addEventListener("click", () => {
+      pills.forEach((p) => p.setAttribute("aria-pressed", "false"));
+      pill.setAttribute("aria-pressed", "true");
+      applyFilter(pill.dataset.filter ?? "all");
+    });
+  });
+</script>
