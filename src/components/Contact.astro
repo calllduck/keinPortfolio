@@ -225,6 +225,12 @@ const base = import.meta.env.BASE_URL;
     <span class="contact__blob contact__blob--a"></span>
     <span class="contact__blob contact__blob--b"></span>
   </div>
+
+  <!-- Smaller double squircle in the bottom-left corner. -->
+  <div class="contact__decor contact__decor--left" aria-hidden="true">
+    <span class="contact__blob contact__blob--c"></span>
+    <span class="contact__blob contact__blob--d"></span>
+  </div>
 </section>
 
 <style>
@@ -427,38 +433,71 @@ const base = import.meta.env.BASE_URL;
 
   /* Big outline squircle, pushed past the bottom-right corner. */
   .contact__blob--a {
-    width: 560px;
-    height: 560px;
-    right: -170px;
-    bottom: -170px;
+    width: 450px;
+    height: 450px;
+    right: -130px;
+    bottom: -130px;
     opacity: 0.45;
-    border-radius: 42% 58% 60% 40% / 50% 45% 55% 50%;
+    border-radius: 48% 60% 40% 52% / 55% 45% 42% 58%;
     animation: contact-morph-a 14s ease-in-out infinite;
   }
 
-  /* Second squircle — smaller, offset only a little so the two
-     overlap heavily, with different timing + phase. */
+  /* Second squircle — tight overlap, different timing + phase. */
   .contact__blob--b {
-    width: 420px;
-    height: 420px;
+    width: 400px;
+    height: 400px;
     right: -130px;
     bottom: -130px;
     opacity: 0.22;
-    border-radius: 55% 45% 42% 58% / 48% 60% 40% 52%;
-    animation: contact-morph-b 9.5s ease-in-out infinite;
-    animation-delay: -3.5s;
+    border-radius: 48% 60% 40% 52% / 55% 45% 42% 58%;
+    animation: contact-morph-b 14s ease-in-out infinite;
   }
 
+  /* Smaller decor in the bottom-left corner */
+  .contact__decor--left {
+    right: auto;
+    left: 0;
+    width: 190px;
+    height: 190px;
+  }
+
+  .contact__blob--c {
+    width: 190px;
+    height: 190px;
+    left: -60px;
+    bottom: -60px;
+    opacity: 0.4;
+    border-radius: 42% 58% 60% 40% / 50% 45% 55% 50%;
+    animation: contact-morph-a 13.5s ease-in-out infinite;
+    animation-delay: -6s;
+  }
+
+  .contact__blob--d {
+    width: 160px;
+    height: 160px;
+    left: -60px;
+    bottom: -60px;
+    opacity: 0.2;
+    border-radius: 55% 45% 42% 58% / 48% 60% 40% 52%;
+    animation: contact-morph-b 9s ease-in-out infinite;
+    animation-delay: -1.5s;
+  }
+
+  /* Morph shape AND drift position, so the two circles' gap changes
+     over time and they intersect more at some points. */
   @keyframes contact-morph-a {
     0%,
     100% {
       border-radius: 42% 58% 60% 40% / 50% 45% 55% 50%;
+      transform: translate(0, 0);
     }
     33% {
       border-radius: 58% 42% 45% 55% / 60% 50% 50% 40%;
+      transform: translate(20px, -16px);
     }
     66% {
       border-radius: 48% 52% 55% 45% / 42% 58% 42% 58%;
+      transform: translate(-14px, 12px);
     }
   }
 
@@ -466,9 +505,11 @@ const base = import.meta.env.BASE_URL;
     0%,
     100% {
       border-radius: 55% 45% 42% 58% / 48% 60% 40% 52%;
+      transform: translate(0, 0);
     }
     50% {
       border-radius: 40% 60% 58% 42% / 55% 42% 58% 45%;
+      transform: translate(-26px, 18px);
     }
   }
 

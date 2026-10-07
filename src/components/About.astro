@@ -21,6 +21,21 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
 ---
 
 <section id="about" class="about">
+  <!-- Decorative double squircle in the top-right corner (mirrors the
+       one at the bottom-right of the Contact section). -->
+  <div class="about__decor" aria-hidden="true">
+    <span class="about__blob about__blob--a"></span>
+    <span class="about__blob about__blob--b"></span>
+  </div>
+
+  <!-- Smaller double squircle in the top-left corner. -->
+  <div class="about__decor about__decor--left" aria-hidden="true">
+    <span class="about__blob about__blob--c"></span>
+    <span class="about__blob about__blob--d"></span>
+  </div>
+
+
+
   <div class="container about__inner" data-reveal>
     <!-- Creative photo frame -->
     <div class="photo">
@@ -59,7 +74,123 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
 
 <style>
   .about {
+    position: relative;
+    overflow: hidden; /* clips the corner decor */
     padding-block: var(--space-3xl) var(--space-2xl);
+  }
+
+  /* Keep content above the decorative shapes */
+  .about > .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---------- Decorative double squircle (top-right corner) ---------- */
+  .about__decor {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 560px;
+    height: 560px;
+    pointer-events: none;
+    z-index: 0;
+    display: none; /* hidden on small screens */
+  }
+
+  @media (min-width: 900px) {
+    .about__decor {
+      display: block;
+    }
+  }
+
+  .about__blob {
+    position: absolute;
+    border: 2px solid var(--color-accent);
+    pointer-events: none;
+  }
+
+  /* Big outline squircle, pushed past the top-right corner. */
+  .about__blob--a {
+    width: 450px;
+    height: 450px;
+    right: -130px;
+    top: -130px;
+    opacity: 0.45;
+    border-radius: 55% 45% 42% 58% / 48% 60% 40% 52%;
+    animation: about-morph-a 14s ease-in-out infinite;
+  }
+
+  /* Second squircle — smaller, tight overlap, different timing + phase. */
+  .about__blob--b {
+    width: 420px;
+    height: 420px;
+    right: -130px;
+    top: -130px;
+    opacity: 0.22;
+    border-radius: 55% 45% 42% 58% / 48% 60% 40% 52%;
+    animation: about-morph-b 14s ease-in-out infinite;
+  }
+
+  /* Smaller decor in the top-left corner */
+  .about__decor--left {
+    right: auto;
+    left: 0;
+    width: 190px;
+    height: 190px;
+  }
+
+  .about__blob--c {
+    width: 190px;
+    height: 190px;
+    left: -60px;
+    top: -60px;
+    opacity: 0.4;
+    border-radius: 42% 58% 60% 40% / 50% 45% 55% 50%;
+    animation: about-morph-a 15s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+
+  .about__blob--d {
+    width: 160px;
+    height: 160px;
+    left: -60px;
+    top: -60px;
+    opacity: 0.2;
+    border-radius: 55% 45% 42% 58% / 48% 60% 40% 52%;
+    animation: about-morph-b 10.5s ease-in-out infinite;
+    animation-delay: -5s;
+  }
+
+
+
+  /* Morph shape AND drift position, so the two circles' gap changes
+     over time and they intersect more at some points. */
+  @keyframes about-morph-a {
+    0%,
+    100% {
+      border-radius: 42% 58% 60% 40% / 50% 45% 55% 50%;
+      transform: translate(0, 0);
+    }
+    33% {
+      border-radius: 58% 42% 45% 55% / 60% 50% 50% 40%;
+      transform: translate(-22px, 16px);
+    }
+    66% {
+      border-radius: 48% 52% 55% 45% / 42% 58% 42% 58%;
+      transform: translate(14px, -12px);
+    }
+  }
+
+  @keyframes about-morph-b {
+    0%,
+    100% {
+      border-radius: 55% 45% 42% 58% / 48% 60% 40% 52%;
+      transform: translate(0, 0);
+    }
+    50% {
+      border-radius: 40% 60% 58% 42% / 55% 42% 58% 45%;
+      transform: translate(26px, -18px);
+    }
   }
 
   .about__inner {
@@ -234,7 +365,8 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
   @media (prefers-reduced-motion: reduce) {
     .photo__frame,
     .photo:hover .photo__frame,
-    .photo__outline {
+    .photo__outline,
+    .about__blob {
       animation: none;
       transition: none;
       transform: none;
