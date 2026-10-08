@@ -1,17 +1,16 @@
 ---
 // CvModal: a popup that lets the visitor pick which CV to view.
 // Mounted once in BaseLayout. Any element with [data-cv-open] opens it.
-// Each option links to a PDF in /public (open in a new tab).
+// Each option links to a URL (e.g. a Google Drive link) in a new tab.
 //
-// Replace the `href` values with your real CV files placed in public/
-// (e.g. public/cv-cyber.pdf).
-const base = import.meta.env.BASE_URL;
-const file = (name: string) => `${base.replace(/\/$/, "")}/${name}`;
-
+// Replace the `href` values below with your real CV links.
 const options = [
-  { label: "Cybersecurity", file: "cv-cybersecurity.pdf" },
-  { label: "Software Development", file: "cv-software-development.pdf" },
-  { label: "UI/UX Design", file: "cv-uiux.pdf" },
+  { label: "Cybersecurity", href: "https://drive.google.com/file/d/1UkaDk5Q09f_HB8mj9yDbEwEaV04cNLTn/view?usp=drive_link" },
+  {
+    label: "Software Development",
+    href: "https://drive.google.com/file/d/1UDNgBFPbYvxgiXEUtayHgQHam4PY5qUf/view?usp=drive_link",
+  },
+  { label: "UI/UX Design", href: "https://drive.google.com/file/d/1ukyL6bm7OFcm1s-vcqqDO2eEzqEWNvRY/view?usp=drive_link" },
 ];
 ---
 
@@ -44,7 +43,7 @@ const options = [
         options.map((o) => (
           <a
             class="cv-option"
-            href={file(o.file)}
+            href={o.href}
             target="_blank"
             rel="noopener"
           >
