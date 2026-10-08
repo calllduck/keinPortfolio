@@ -1,0 +1,232 @@
+---
+// CvModal: a popup that lets the visitor pick which CV to view.
+// Mounted once in BaseLayout. Any element with [data-cv-open] opens it.
+// Each option links to a PDF in /public (open in a new tab).
+//
+// Replace the `href` values with your real CV files placed in public/
+// (e.g. public/cv-cyber.pdf).
+const base = import.meta.env.BASE_URL;
+const file = (name: string) => `${base.replace(/\/$/, "")}/${name}`;
+
+const options = [
+  { label: "Cybersecurity", file: "cv-cybersecurity.pdf" },
+  { label: "Software Development", file: "cv-software-development.pdf" },
+  { label: "UI/UX Design", file: "cv-uiux.pdf" },
+];
+---
+
+<div class="cv-modal" data-cv-modal hidden>
+  <div class="cv-modal__backdrop" data-cv-close></div>
+
+  <div
+    class="cv-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cv-modal-title"
+  >
+    <button class="cv-modal__close" type="button" data-cv-close aria-label="Close">
+      <svg viewBox="0 0 24 24" width="22" height="22">
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          d="M6 6l12 12M18 6L6 18"
+        ></path>
+      </svg>
+    </button>
+
+    <h3 class="cv-modal__title" id="cv-modal-title">Which CV would you like?</h3>
+    <p class="cv-modal__subtitle">Pick the role you're interested in.</p>
+
+    <div class="cv-modal__options">
+      {
+        options.map((o) => (
+          <a
+            class="cv-option"
+            href={file(o.file)}
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="cv-option__label">{o.label}</span>
+            <span class="cv-option__hint">View PDF ↗</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .cv-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    display: grid;
+    place-items: center;
+    padding: var(--space-xl);
+  }
+
+  .cv-modal[hidden] {
+    display: none;
+  }
+
+  .cv-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: cv-fade var(--dur) var(--ease);
+  }
+
+  .cv-modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(440px, 100%);
+    padding: var(--space-xl);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    animation: cv-pop var(--dur) var(--ease);
+  }
+
+  .cv-modal__close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition:
+      color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+
+  .cv-modal__close:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .cv-modal__title {
+    font-size: var(--fs-xl);
+    padding-right: var(--space-xl);
+  }
+
+  .cv-modal__subtitle {
+    margin-top: var(--space-2xs);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+  }
+
+  .cv-modal__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+
+  .cv-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    transition:
+      border-color var(--dur) var(--ease),
+      background-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+
+  .cv-option:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    color: var(--color-text);
+  }
+
+  .cv-option__label {
+    font-family: var(--font-display);
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-md);
+  }
+
+  .cv-option__hint {
+    font-size: var(--fs-sm);
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  @keyframes cv-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes cv-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cv-modal__backdrop,
+    .cv-modal__dialog {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const modal = document.querySelector<HTMLElement>("[data-cv-modal]");
+
+  if (modal) {
+    const open = () => {
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+    };
+    const close = () => {
+      modal.hidden = true;
+      document.body.style.overflow = "";
+    };
+
+    document.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+
+      // Any trigger opens the modal.
+      if (target.closest("[data-cv-open]")) {
+        e.preventDefault();
+        open();
+        return;
+      }
+
+      // Backdrop / close button.
+      if (target.closest("[data-cv-close]")) {
+        close();
+        return;
+      }
+
+      // Picking an option closes the modal (the link opens a new tab).
+      if (target.closest(".cv-option")) {
+        close();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) close();
+    });
+  }
+</script>
