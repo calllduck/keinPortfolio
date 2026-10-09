@@ -13,7 +13,7 @@ const base = import.meta.env.BASE_URL;
 const {
   photo = "me.jpg",
   photoAlt = "Portrait of Ke'in",
-  cvHref = "https://drive.google.com/file/d/1A2-c36are0jBg-YZDHhnyXf8Ui1CLncW/view?usp=drive_link",
+  cvHref = "https://drive.google.com/file/d/1NTpFuE03--S37xGRo5yA6tHSJ9lcrZ2k/view?usp=drive_link",
   contactHref = "#contact",
 } = Astro.props;
 
@@ -65,7 +65,7 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
         From design and development to security, I build end-to-end software solutions that transform complex ideas into reliable digital products.
       </p>
       <div class="about__actions">
-        <button class="btn btn--lg btn--outline" type="button" data-cv-open>View my CV</button>
+        <a class="btn btn--lg btn--outline" href={cvHref} target="_blank" rel="noopener">View my CV</a>
         <a class="btn btn--lg btn--fill" href={contactHref}>Contact me</a>
       </div>
     </div>

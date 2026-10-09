@@ -12,7 +12,7 @@ interface Props {
 }
 const {
   name = "Kettin",
-  cvHref = "https://drive.google.com/file/d/1A2-c36are0jBg-YZDHhnyXf8Ui1CLncW/view?usp=drive_link",
+  cvHref = "https://drive.google.com/file/d/1NTpFuE03--S37xGRo5yA6tHSJ9lcrZ2k/view?usp=drive_link",
   contactHref = "#contact",
 } = Astro.props;
 ---
@@ -46,7 +46,7 @@ const {
         <li><a class="nav__link" href="#awards">Awards</a></li>
       </ul>
       <div class="nav__actions">
-        <button class="btn btn--outline" type="button" data-cv-open>View my CV</button>
+        <a class="btn btn--outline" href={cvHref} target="_blank" rel="noopener">View my CV</a>
         <a class="btn btn--fill" href={contactHref}>Contact me</a>
       </div>
     </nav>
