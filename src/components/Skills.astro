@@ -1,0 +1,125 @@
+---
+const categories = [
+  {
+    name: "Web & Mobile Penetration Testing",
+    skills: ["Python", "OWASP ZAP", "Nmap", "Burp Suite", "OWASP WSTG", "ffuf", "JADX", "MobSF", "Frida", "Apktool", "Smali"],
+  },
+  {
+    name: "Web & Mobile Development",
+    skills: ["C", "Java", "HTML", "CSS", "JavaScript", "React", "Tailwind CSS", "Node.js", "Express.js", "PHP", "Laravel", "Flutter", "PostgreSQL", "Prisma ORM", "Midtrans"],
+  },
+  {
+    name: "DevOps & DevSecOps",
+    skills: ["Docker", "Git", "GitHub Actions", "Linux", "Trivy", "npm audit", "CodeQL", "Gitleaks"],
+  },
+  {
+    name: "UI/UX Design",
+    skills: ["Figma", "User Research", "Wireframing", "Prototyping", "Usability Testing", "Design Systems"],
+  },
+];
+---
+
+<section id="skills" class="skills" aria-labelledby="skills-title">
+  <div class="container" data-reveal>
+    <header class="skills__header">
+      <h2 id="skills-title" class="skills__title">Skills</h2>
+      <p class="skills__subtitle">Tools and techniques I work with.</p>
+    </header>
+
+    <ul class="skills__grid">
+      {categories.map((category) => (
+        <li class="skill-card">
+          <h3 class="skill-card__title">{category.name}</h3>
+          <ul class="skill-card__tags">
+            {category.skills.map((skill) => <li class="skill-card__tag">{skill}</li>)}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .skills {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    padding-block: var(--space-2xl);
+    background: linear-gradient(to bottom, var(--color-surface) 0%, var(--color-surface) 80%, var(--color-bg) 100%);
+    scroll-margin-top: 72px;
+  }
+
+  .skills::before {
+    content: "";
+    position: absolute;
+    inset: -160px 0 auto;
+    height: 160px;
+    background: linear-gradient(to bottom, transparent, var(--color-surface));
+    pointer-events: none;
+  }
+
+  .skills :global([data-reveal]) {
+    transform: translateY(14px);
+  }
+
+  .skills :global([data-reveal].is-visible) {
+    transform: translateY(0);
+  }
+
+  .skills__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .skills__title {
+    font-size: var(--fs-2xl);
+  }
+
+  .skills__subtitle {
+    margin-top: var(--space-xs);
+    font-weight: var(--fw-light);
+    color: var(--color-text-muted);
+  }
+
+  .skills__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .skill-card {
+    min-width: 0;
+    padding: var(--space-lg);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .skill-card__title {
+    margin-bottom: var(--space-md);
+    font-size: var(--fs-lg);
+    color: var(--color-accent);
+  }
+
+  .skill-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .skill-card__tag {
+    max-width: 100%;
+    padding: var(--space-2xs) var(--space-sm);
+    font-size: var(--fs-sm);
+    overflow-wrap: anywhere;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+  }
+
+  @media (max-width: 720px) {
+    .skills__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,226 @@
+---
+const skills = [
+  "Web & Mobile Penetration Testing",
+  "Web & Mobile Development",
+  "DevOps & DevSecOps",
+  "UI/UX Design",
+];
+---
+
+<div class="loading-screen" aria-hidden="true">
+  <div class="loading-screen__content">
+    <p class="loading-screen__brand">Kettin’s Portfolio</p>
+    <p class="loading-screen__caption">Preparing my workspace</p>
+    <div class="loading-screen__skills">
+      {skills.map((skill, index) => (
+        <p class="loading-screen__skill" style={`--index: ${index}`}>{skill}</p>
+      ))}
+    </div>
+    <div class="loading-screen__track">
+      <svg viewBox="0 0 320 100" fill="none" aria-hidden="true">
+        <path class="loading-screen__signal" d="M12 50 H112 C128 50 132 24 144 24 S160 76 172 76 S188 50 208 50 H308" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<style>
+  .loading-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    place-items: center;
+    padding: var(--space-lg);
+    background: var(--color-bg);
+    background-image: radial-gradient(ellipse at center, var(--color-accent-soft), transparent 65%);
+    opacity: 1;
+    filter: blur(0);
+    transition: opacity 700ms ease, filter 700ms ease;
+  }
+
+  :global(html.is-loading) .loading-screen,
+  .loading-screen.is-leaving {
+    display: grid;
+  }
+
+  :global(html.is-loading) {
+    overflow: hidden;
+  }
+
+  :global(html.is-loading) :global(.portfolio-content) {
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(14px);
+  }
+
+  :global(.portfolio-content) {
+    opacity: 1;
+    filter: none;
+    transition: opacity 850ms ease, filter 850ms ease;
+  }
+
+  .loading-screen.is-leaving {
+    opacity: 0;
+    filter: blur(14px);
+    pointer-events: none;
+  }
+
+  .loading-screen__content {
+    width: min(100%, 580px);
+    text-align: center;
+  }
+
+  .loading-screen__brand {
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 5vw, 2.5rem);
+    font-weight: var(--fw-bold);
+    animation: intro 450ms ease both;
+  }
+
+  .loading-screen__caption {
+    margin-top: var(--space-xs);
+    font-size: var(--fs-sm);
+    animation: intro 450ms 100ms ease both;
+  }
+
+  .loading-screen__skills {
+    display: grid;
+    align-items: center;
+    min-height: 130px;
+    margin-block: var(--space-lg);
+  }
+
+  .loading-screen__skill {
+    grid-area: 1 / 1;
+    color: var(--color-accent);
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    font-weight: var(--fw-medium);
+    line-height: 1.4;
+    opacity: 0;
+    animation: skill 2000ms ease both;
+    animation-delay: calc(400ms + var(--index) * 2000ms);
+  }
+
+  .loading-screen__track {
+    width: min(100%, 320px);
+    margin-inline: auto;
+  }
+
+  .loading-screen__track svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .loading-screen__track path {
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .loading-screen__signal {
+    stroke: var(--color-accent);
+    filter: drop-shadow(0 0 3px var(--color-accent-soft));
+    vector-effect: non-scaling-stroke;
+  }
+
+  @keyframes intro {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes skill {
+    0% { opacity: 0; transform: translateY(10px); }
+    10%, 90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-8px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.portfolio-content),
+    .loading-screen,
+    .loading-screen.is-leaving {
+      filter: none;
+      transition: none;
+    }
+    :global(html.is-loading) :global(.portfolio-content) {
+      filter: none;
+    }
+    .loading-screen__skills { gap: var(--space-sm); }
+    .loading-screen__skill {
+      grid-area: auto;
+      opacity: 1;
+      animation: none;
+      font-size: var(--fs-base);
+    }
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const loader = document.querySelector<HTMLElement>(".loading-screen");
+  const content = document.querySelector<HTMLElement>(".portfolio-content");
+  if (root.classList.contains("is-loading") && loader && content) {
+    content.inert = true;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const signal = loader.querySelector<SVGPathElement>(".loading-screen__signal");
+    let frame = 0;
+    if (signal && !reducedMotion) {
+      const count = 41;
+      const makeWave = () => {
+        const frequency = 2 + Math.random() * 3;
+        const amplitude = 14 + Math.random() * 22;
+        const phase = Math.random() * Math.PI * 2;
+        return Array.from({ length: count }, (_, index) => {
+          const position = index / (count - 1);
+          const envelope = Math.sin(Math.PI * position) ** 3;
+          return 50 + envelope * amplitude * (
+            0.8 * Math.sin(position * Math.PI * 2 * frequency + phase) +
+            0.2 * Math.sin(position * Math.PI * 2 * frequency * 1.7 + phase)
+          );
+        });
+      };
+      let previous = makeWave();
+      let next = makeWave();
+      let started = performance.now();
+      let duration = 500 + Math.random() * 600;
+      const animate = (now: number) => {
+        if (!root.classList.contains("is-loading")) return;
+        const progress = Math.min(1, (now - started) / duration);
+        const blend = (1 - Math.cos(progress * Math.PI)) / 2;
+        const points = previous.map((height, index) => ({
+          x: 12 + index * 296 / (count - 1),
+          y: height + (next[index] - height) * blend,
+        }));
+        let path = `M${points[0].x} ${points[0].y}`;
+        for (let index = 0; index < count - 1; index++) {
+          const before = points[Math.max(0, index - 1)];
+          const start = points[index];
+          const end = points[index + 1];
+          const after = points[Math.min(count - 1, index + 2)];
+          path += ` C${start.x + (end.x - before.x) / 6} ${start.y + (end.y - before.y) / 6},${end.x - (after.x - start.x) / 6} ${end.y - (after.y - start.y) / 6},${end.x} ${end.y}`;
+        }
+        signal.setAttribute("d", path);
+        if (progress === 1) {
+          previous = next;
+          next = makeWave();
+          started = now;
+          duration = 500 + Math.random() * 600;
+        }
+        frame = requestAnimationFrame(animate);
+      };
+      frame = requestAnimationFrame(animate);
+    }
+    const elapsed = performance.now() - Number(root.dataset.loadingStarted ?? 0);
+    window.setTimeout(() => {
+      cancelAnimationFrame(frame);
+      loader.classList.add("is-leaving");
+      root.classList.remove("is-loading");
+      content.inert = false;
+      try { sessionStorage.setItem("portfolio-intro-seen", "true"); } catch {}
+      window.setTimeout(() => loader.remove(), reducedMotion ? 0 : 700);
+    }, Math.max(0, (reducedMotion ? 800 : 8400) - elapsed));
+  }
+</script>

@@ -14,6 +14,7 @@ import "@fontsource/inter/700.css";
 import "../styles/global.css";
 import Lightbox from "../components/Lightbox.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
+import LoadingScreen from "../components/LoadingScreen.astro";
 // CvModal (multi-CV popup) kept as a backup. To re-enable:
 //   1. uncomment the import below
 //   2. uncomment <CvModal /> near </body>
@@ -46,9 +47,27 @@ const favicon = `${base.replace(/\/$/, "")}/favicon.svg`;
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <script is:inline>
+      try {
+        if (!sessionStorage.getItem("portfolio-intro-seen")) {
+          document.documentElement.classList.add("is-loading");
+          document.documentElement.dataset.loadingStarted = String(performance.now());
+        }
+      } catch {
+        document.documentElement.classList.add("is-loading");
+        document.documentElement.dataset.loadingStarted = String(performance.now());
+      }
+      // Restore access even if the component script cannot load.
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("is-loading");
+        const content = document.querySelector(".portfolio-content");
+        if (content) content.inert = false;
+      }, 12000);
+    </script>
   </head>
   <body>
-    <slot />
+    <LoadingScreen />
+    <div class="portfolio-content"><slot /></div>
     <Lightbox />
     <ScrollReveal />
     {/* <CvModal /> */}
