@@ -1,0 +1,93 @@
+---
+interface Props {
+  title: string;
+  issuer?: string;
+  date: string;
+  image?: string;
+  imageAlt?: string;
+  credential?: string;
+}
+const { title, issuer, date, image, imageAlt, credential } = Astro.props;
+---
+
+<details class="achievement">
+  <summary>
+    {image && <img src={image} alt={imageAlt ?? title} loading="lazy" decoding="async" />}
+    <span class="achievement__text">
+      <span class="achievement__title">{title}</span>
+      <span class="achievement__meta">{issuer}{issuer && " · "}{date}</span>
+    </span>
+    <span class="achievement__chevron" aria-hidden="true">⌄</span>
+  </summary>
+  <div class="achievement__details">
+    {issuer && <p>Issued by {issuer} · {date}</p>}
+    <div class="achievement__actions">
+      {image && <button type="button" data-zoomable data-src={image} aria-label={`Expand image: ${title}`}>View image ↗</button>}
+      {credential && <a href={credential} target="_blank" rel="noopener noreferrer">View credential ↗</a>}
+    </div>
+  </div>
+</details>
+
+<style>
+  .achievement {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color var(--dur) var(--ease);
+  }
+  .achievement:hover, .achievement[open] { border-color: var(--color-accent); }
+  summary {
+    min-height: 104px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary img {
+    width: 88px;
+    height: 72px;
+    flex-shrink: 0;
+    object-fit: contain;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-sm);
+  }
+  .achievement__text { flex: 1; min-width: 0; }
+  .achievement__title {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    overflow-wrap: anywhere;
+  }
+  .achievement__meta {
+    display: block;
+    margin-top: var(--space-xs);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .achievement__chevron { color: var(--color-accent); transition: transform var(--dur) var(--ease); }
+  .achievement[open] .achievement__chevron { transform: rotate(180deg); }
+  .achievement__details {
+    padding: var(--space-md);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--fs-sm);
+  }
+  .achievement__actions { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-xs); }
+  button {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--color-accent);
+    font: inherit;
+    cursor: zoom-in;
+  }
+  button:hover { color: var(--color-accent-hover); }
+  @media (max-width: 480px) {
+    summary { min-height: 84px; gap: var(--space-sm); padding: var(--space-sm); }
+    summary img { width: 64px; height: 60px; }
+  }
+</style>

@@ -236,8 +236,8 @@ const projects: Project[] = [
 ---
 
 <section id="projects" class="projects">
-  <div class="container" data-reveal>
-    <header class="projects__header">
+  <div class="container">
+    <header class="projects__header" data-reveal>
       <h2 class="projects__title">Projects</h2>
       <p class="projects__subtitle">A few things I've built.</p>
     </header>
@@ -258,19 +258,23 @@ const projects: Project[] = [
       }
     </div>
 
-    <div class="projects__grid" data-grid>
+    <div id="projects-grid" class="projects__grid" data-grid>
       {
         projects.map((p) => {
           // Normalize to a space-separated list so filtering can match
           // any of a project's categories.
           const cats = Array.isArray(p.category) ? p.category : [p.category];
           return (
-            <div class="projects__item" data-category={cats.join(" ")}>
+            <div class="projects__item" data-category={cats.join(" ")} data-reveal>
               <ProjectCard {...p} />
             </div>
           );
         })
       }
+    </div>
+
+    <div class="projects__more" data-more-wrapper hidden>
+      <button class="btn btn--outline" type="button" data-more aria-controls="projects-grid" aria-expanded="false">More</button>
     </div>
 
     <p class="projects__empty" data-empty hidden>
@@ -337,48 +341,39 @@ const projects: Project[] = [
     box-shadow: var(--shadow-glow);
   }
 
-  /* ---------- Horizontal scroll row ---------- */
+  /* ---------- Responsive project grid ---------- */
   .projects__grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-lg);
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-block: var(--space-xs) var(--space-md);
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-border-strong) transparent;
   }
 
-  .projects__grid::-webkit-scrollbar {
-    height: 8px;
-  }
-  .projects__grid::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .projects__grid::-webkit-scrollbar-thumb {
-    background: var(--color-border-strong);
-    border-radius: var(--radius-pill);
-  }
-  .projects__grid::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent);
-  }
-
-  /* Each item is a fixed-width card so the row scrolls */
   .projects__item {
-    flex: 0 0 380px;
-    scroll-snap-align: start;
+    min-width: 0;
   }
 
-  /* Mobile: slightly under screen width so the next card peeks out */
+  @media (max-width: 1024px) {
+    .projects__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   @media (max-width: 600px) {
-    .projects__item {
-      flex-basis: 80vw;
-      max-width: 320px;
+    .projects__grid {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
   .projects__item[hidden] {
     display: none;
   }
+
+  .projects__more {
+    margin-top: var(--space-xl);
+    text-align: center;
+  }
+
+  .projects__more[hidden] { display: none; }
 
   .projects__empty {
     color: var(--color-text-muted);
@@ -387,28 +382,45 @@ const projects: Project[] = [
 </style>
 
 <script>
-  // Client-side category filtering.
   const pills = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
   const items = document.querySelectorAll<HTMLElement>("[data-category]");
   const empty = document.querySelector<HTMLElement>("[data-empty]");
+  const more = document.querySelector<HTMLButtonElement>("[data-more]");
+  const moreWrapper = document.querySelector<HTMLElement>("[data-more-wrapper]");
+  const tablet = window.matchMedia("(max-width: 1024px)");
+  const mobile = window.matchMedia("(max-width: 600px)");
+  let activeFilter = "all";
+  let expanded = false;
 
-  const applyFilter = (value: string) => {
-    let visible = 0;
+  const applyFilter = () => {
+    const limit = (mobile.matches ? 1 : tablet.matches ? 2 : 3) * 2;
+    let matched = 0;
     items.forEach((item) => {
-      // data-category may hold multiple space-separated categories.
       const cats = (item.dataset.category ?? "").split(" ");
-      const match = value === "all" || cats.includes(value);
-      item.hidden = !match;
-      if (match) visible += 1;
+      const match = activeFilter === "all" || cats.includes(activeFilter);
+      if (match) matched += 1;
+      item.hidden = !match || (activeFilter === "all" && !expanded && matched > limit);
     });
-    if (empty) empty.hidden = visible !== 0;
+    if (empty) empty.hidden = matched !== 0;
+    if (moreWrapper) moreWrapper.hidden = activeFilter !== "all" || expanded || matched <= limit;
+    more?.setAttribute("aria-expanded", String(expanded));
   };
 
   pills.forEach((pill) => {
     pill.addEventListener("click", () => {
       pills.forEach((p) => p.setAttribute("aria-pressed", "false"));
       pill.setAttribute("aria-pressed", "true");
-      applyFilter(pill.dataset.filter ?? "all");
+      activeFilter = pill.dataset.filter ?? "all";
+      expanded = false;
+      applyFilter();
     });
   });
+
+  more?.addEventListener("click", () => {
+    expanded = true;
+    applyFilter();
+  });
+  tablet.addEventListener("change", applyFilter);
+  mobile.addEventListener("change", applyFilter);
+  applyFilter();
 </script>
