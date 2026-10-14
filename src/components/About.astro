@@ -20,7 +20,7 @@ const {
 const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
 ---
 
-<section id="about" class="about" aria-labelledby="hero-title">
+<section class="about" aria-labelledby="hero-title">
   <!-- Decorative double squircle in the top-right corner (mirrors the
        one at the bottom-right of the Contact section). -->
   <div class="about__decor" aria-hidden="true">
@@ -91,7 +91,6 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
     overflow: hidden; /* clips the corner decor */
     padding-block: clamp(90px, 12svh, 120px);
     background: radial-gradient(ellipse at 75% 45%, var(--color-accent-soft), transparent 55%), var(--color-bg);
-    scroll-margin-top: 72px;
   }
 
   .about::after {
@@ -249,9 +248,9 @@ const photoSrc = `${base.replace(/\/$/, "")}/${photo}`;
     inset: -12%;
     z-index: -1;
     background: radial-gradient(
-      circle at 50% 40%,
+      ellipse closest-side at 50% 40%,
       var(--color-accent-glow),
-      transparent 70%
+      transparent 100%
     );
     filter: blur(6px);
   }

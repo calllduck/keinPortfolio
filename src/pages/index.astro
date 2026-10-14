@@ -17,7 +17,7 @@ import Footer from "../components/Footer.astro";
   <Navbar name="Kettin" />
 
   <main>
-    <div class="hero-skills">
+    <div id="about" class="hero-skills">
       <About photoAlt="Portrait of Ke'in" />
       <Skills />
     </div>
@@ -95,6 +95,8 @@ import Footer from "../components/Footer.astro";
   }
 
   .hero-skills {
+    /* Anchor to the fixed document position, rather than the sticky hero. */
+    scroll-margin-top: 72px;
     position: relative;
     isolation: isolate;
   }
