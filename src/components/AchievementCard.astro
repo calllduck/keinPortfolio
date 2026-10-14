@@ -8,46 +8,47 @@ interface Props {
   credential?: string;
 }
 const { title, issuer, date, image, imageAlt, credential } = Astro.props;
+const Tag = credential ? "a" : image ? "button" : "div";
 ---
 
-<details class="achievement">
-  <summary>
-    {image && <img src={image} alt={imageAlt ?? title} loading="lazy" decoding="async" />}
-    <span class="achievement__text">
-      <span class="achievement__title">{title}</span>
-      <span class="achievement__meta">{issuer}{issuer && " · "}{date}</span>
-    </span>
-    <span class="achievement__chevron" aria-hidden="true">⌄</span>
-  </summary>
-  <div class="achievement__details">
-    {issuer && <p>Issued by {issuer} · {date}</p>}
-    <div class="achievement__actions">
-      {image && <button type="button" data-zoomable data-src={image} aria-label={`Expand image: ${title}`}>View image ↗</button>}
-      {credential && <a href={credential} target="_blank" rel="noopener noreferrer">View credential ↗</a>}
-    </div>
-  </div>
-</details>
+<Tag
+  class="achievement"
+  href={credential}
+  type={Tag === "button" ? "button" : undefined}
+  data-zoomable={!credential && image ? true : undefined}
+  data-src={!credential ? image : undefined}
+  aria-label={credential ? `View credential: ${title}` : image ? `Expand image: ${title}` : undefined}
+>
+  {image && <img src={image} alt={imageAlt ?? title} loading="lazy" decoding="async" />}
+  <span class="achievement__text">
+    <span class="achievement__title">{title}</span>
+    <span class="achievement__meta">{issuer}{issuer && " · "}{date}</span>
+  </span>
+</Tag>
 
 <style>
   .achievement {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    transition: border-color var(--dur) var(--ease);
-  }
-  .achievement:hover, .achievement[open] { border-color: var(--color-accent); }
-  summary {
+    width: 100%;
     min-height: 104px;
     display: flex;
     align-items: center;
     gap: var(--space-md);
     padding: var(--space-md);
-    cursor: pointer;
-    list-style: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    color: var(--color-text);
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease);
   }
-  summary::-webkit-details-marker { display: none; }
-  summary img {
+  a.achievement, button.achievement { cursor: pointer; }
+  button.achievement { cursor: zoom-in; }
+  .achievement:hover { border-color: var(--color-accent); }
+  .achievement:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+  .achievement img {
     width: 88px;
     height: 72px;
     flex-shrink: 0;
@@ -69,25 +70,8 @@ const { title, issuer, date, image, imageAlt, credential } = Astro.props;
     font-size: var(--fs-sm);
     color: var(--color-text-muted);
   }
-  .achievement__chevron { color: var(--color-accent); transition: transform var(--dur) var(--ease); }
-  .achievement[open] .achievement__chevron { transform: rotate(180deg); }
-  .achievement__details {
-    padding: var(--space-md);
-    border-top: 1px solid var(--color-border);
-    font-size: var(--fs-sm);
-  }
-  .achievement__actions { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-xs); }
-  button {
-    background: none;
-    border: 0;
-    padding: 0;
-    color: var(--color-accent);
-    font: inherit;
-    cursor: zoom-in;
-  }
-  button:hover { color: var(--color-accent-hover); }
   @media (max-width: 480px) {
-    summary { min-height: 84px; gap: var(--space-sm); padding: var(--space-sm); }
-    summary img { width: 64px; height: 60px; }
+     .achievement { min-height: 84px; gap: var(--space-sm); padding: var(--space-sm); }
+    .achievement img { width: 64px; height: 60px; }
   }
 </style>
