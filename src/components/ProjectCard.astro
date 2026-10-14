@@ -41,13 +41,34 @@ const allLinks: ProjectLink[] = [
   ...(repo ? [{ label: repoLabel, url: repo }] : []),
   ...links,
 ];
+const linkPriority = ({ label }: ProjectLink): number => {
+  const normalized = label.trim().toLowerCase();
+  if (/\b(live|demo|website)\b/.test(normalized)) return 0;
+  if (/\b(code|repo|source)\b/.test(normalized)) return 1;
+  if (/\b(report|paper)\b/.test(normalized)) return 2;
+  return 3;
+};
+const primaryLink = [...allLinks].sort((a, b) => linkPriority(a) - linkPriority(b))[0];
 ---
 
 <article class="card">
+  {primaryLink && (
+    <a
+      class="card__destination"
+      href={primaryLink.url}
+      target="_blank"
+      rel="noopener"
+      aria-label={`${title} — ${primaryLink.label} (opens in a new tab)`}
+    />
+  )}
   {
     imageSrc && (
       <div class="card__media">
-        <ZoomableImage src={imageSrc} alt={`${title} preview`} />
+        {primaryLink ? (
+          <img src={imageSrc} alt={`${title} preview`} loading="lazy" />
+        ) : (
+          <ZoomableImage src={imageSrc} alt={`${title} preview`} />
+        )}
       </div>
     )
   }
@@ -87,6 +108,7 @@ const allLinks: ProjectLink[] = [
 
 <style>
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%; /* fill the flex item so all cards match the tallest */
@@ -100,7 +122,25 @@ const allLinks: ProjectLink[] = [
       box-shadow var(--dur) var(--ease);
   }
 
-  .card:hover {
+  .card__destination {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  .card__destination:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: -3px;
+  }
+
+  .card__link {
+    position: relative;
+    z-index: 2;
+  }
+
+  .card:hover,
+  .card:focus-within {
     border-color: var(--color-accent);
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
