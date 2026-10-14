@@ -26,7 +26,7 @@ const CATEGORIES: { value: Category | "all"; label: string }[] = [
 
 const projects: Project[] = [
   {
-    title: "Travel-App Penetration Testing Project",
+    title: "Travel-App Penetration Testing Project [REDACTED]",
     description:
       "Conducted a real-world mobile pentest on a live travel app by decompiling its Android APK, exploiting critical hardcoded credentials and backend secrets, and delivering OWASP/CVSS v4.0 risk remediations.",
     category: "cyber",
@@ -40,7 +40,7 @@ const projects: Project[] = [
     image: "proj1.png",
   },
   {
-    title: "CTF Web App VAPT",
+    title: "CTF Web App VAPT [REDACTED]",
     description:
       "Performed a grey-box security assessment on a CTF learning platform using OWASP WSTG. Uncovered IDOR and CSRF vulnerabilities (CVSS 5.3), followed by detailed remediation strategies.",
     category: "cyber",
@@ -238,7 +238,7 @@ const projects: Project[] = [
 <section id="projects" class="projects">
   <div class="container">
     <header class="projects__header" data-reveal>
-      <h2 class="projects__title">Projects</h2>
+      <h2 class="projects__title" tabindex="-1">Projects</h2>
       <p class="projects__subtitle">A few things I've built.</p>
     </header>
 
@@ -252,6 +252,12 @@ const projects: Project[] = [
             data-filter={c.value}
             aria-pressed={i === 0 ? "true" : "false"}
           >
+            <svg class="filter-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              {c.value === "all" && <><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>}
+              {c.value === "cyber" && <><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z" /><path d="m8 12 3 3 5-6" /></>}
+              {c.value === "software" && <path d="m8 6-6 6 6 6M16 6l6 6-6 6M14 4l-4 16" />}
+              {c.value === "uiux" && <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 9h18M9 9v11M6 6.5h.01M9 6.5h.01" /></>}
+            </svg>
             {c.label}
           </button>
         ))
@@ -276,6 +282,10 @@ const projects: Project[] = [
     <div class="projects__more" data-more-wrapper hidden>
       <button class="btn btn--outline" type="button" data-more aria-controls="projects-grid" aria-expanded="false">More</button>
     </div>
+
+    <button class="btn btn--outline projects__collapse" type="button" data-collapse aria-controls="projects-grid" aria-expanded="true" hidden>
+      Show less <span aria-hidden="true">↑</span>
+    </button>
 
     <p class="projects__empty" data-empty hidden>
       No projects in this category yet.
@@ -311,6 +321,10 @@ const projects: Project[] = [
   }
 
   .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    min-height: 44px;
     font-family: var(--font-display);
     font-size: var(--fs-base);
     font-weight: var(--fw-medium);
@@ -331,6 +345,25 @@ const projects: Project[] = [
   .filter-pill:hover {
     color: var(--color-text);
     border-color: var(--color-border-strong);
+  }
+
+  .filter-pill__icon {
+    width: 1.15em;
+    height: 1.15em;
+    flex-shrink: 0;
+  }
+
+  .filter-pill:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .filter-pill {
+      font-size: var(--fs-sm);
+      padding-inline: 1em;
+      line-height: 1.3;
+    }
   }
 
   /* Active pill: filled pink with a soft glow */
@@ -375,6 +408,26 @@ const projects: Project[] = [
 
   .projects__more[hidden] { display: none; }
 
+  .projects__collapse { display: none; }
+
+  @media (max-width: 600px) {
+    .projects__collapse:not([hidden]) {
+      display: inline-flex;
+      position: fixed;
+      bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      min-height: 44px;
+      white-space: nowrap;
+      background: var(--color-surface);
+      box-shadow: 0 4px 24px rgb(0 0 0 / 35%);
+    }
+
+  }
+
+  .projects__title { scroll-margin-top: 100px; }
+
   .projects__empty {
     color: var(--color-text-muted);
     font-weight: var(--fw-light);
@@ -387,10 +440,21 @@ const projects: Project[] = [
   const empty = document.querySelector<HTMLElement>("[data-empty]");
   const more = document.querySelector<HTMLButtonElement>("[data-more]");
   const moreWrapper = document.querySelector<HTMLElement>("[data-more-wrapper]");
+  const section = document.querySelector<HTMLElement>("#projects");
+  const title = section?.querySelector<HTMLElement>(".projects__title");
+  const collapse = section?.querySelector<HTMLButtonElement>("[data-collapse]");
   const tablet = window.matchMedia("(max-width: 1024px)");
   const mobile = window.matchMedia("(max-width: 600px)");
   let activeFilter = "all";
   let expanded = false;
+
+  const updateCollapse = () => {
+    if (!collapse || !section) return;
+    const bounds = section.getBoundingClientRect();
+    const middle = window.innerHeight / 2;
+    collapse.hidden = !mobile.matches || !expanded || activeFilter !== "all"
+      || bounds.top > middle || bounds.bottom < middle;
+  };
 
   const applyFilter = () => {
     const limit = (mobile.matches ? 1 : tablet.matches ? 2 : 3) * 2;
@@ -404,6 +468,7 @@ const projects: Project[] = [
     if (empty) empty.hidden = matched !== 0;
     if (moreWrapper) moreWrapper.hidden = activeFilter !== "all" || expanded || matched <= limit;
     more?.setAttribute("aria-expanded", String(expanded));
+    updateCollapse();
   };
 
   pills.forEach((pill) => {
@@ -420,6 +485,22 @@ const projects: Project[] = [
     expanded = true;
     applyFilter();
   });
+  collapse?.addEventListener("click", () => {
+    expanded = false;
+    applyFilter();
+    title?.focus({ preventScroll: true });
+    title?.scrollIntoView({ behavior: "instant", block: "start" });
+  });
+  let scrollPending = false;
+  window.addEventListener("scroll", () => {
+    if (scrollPending) return;
+    scrollPending = true;
+    requestAnimationFrame(() => {
+      updateCollapse();
+      scrollPending = false;
+    });
+  }, { passive: true });
+  window.addEventListener("resize", updateCollapse);
   tablet.addEventListener("change", applyFilter);
   mobile.addEventListener("change", applyFilter);
   applyFilter();
